@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>icon/surface.png</file>
+        <file>icon/surfaceWithEdge.png</file>
+        <file>icon/xMinus.png</file>
+        <file>icon/xPlus.png</file>
+        <file>icon/yMinus.png</file>
+        <file>icon/yPlus.png</file>
+        <file>icon/zMinus.png</file>
+        <file>icon/zPlus.png</file>
+        <file>icon/fit.png</file>
+    </qresource>
+</RCC>
