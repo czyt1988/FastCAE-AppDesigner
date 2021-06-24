@@ -2,9 +2,9 @@ QT          +=  core gui widgets
 TEMPLATE	=   app
 CONFIG		+=  c++11
 CONFIG		+=  qt
-TARGET		=   D3Test
+TARGET		=   tst_FCD3Viewer
 
-include($$PWD/../common.pri)
+include($$PWD/../../common.pri)
 
 DESTDIR = $${BIN_DIR}
 MOC_DIR = $${DESTDIR}/build/$${TARGET}/moc
@@ -22,7 +22,7 @@ SOURCES += \
 FORMS += \
         $$PWD/MainWindow.ui
 
-include($$PWD/../FCD3Viewer/FCD3Viewer.pri)
+include($${FC_SRC_DIR}/FCD3Viewer/FCD3Viewer.pri)
 
 
 
