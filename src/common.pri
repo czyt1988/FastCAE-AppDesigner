@@ -12,8 +12,8 @@ CONFIG(debug, debug|release){
     }
 }
 BIN_LIB_DIR = $$BIN_DIR/libs
-VTK_LIB_BASE_DIR = $$PWD/VTK
-OCC_LIB_BASE_DIR = $$PWD/OCC
+VTK_LIB_BASE_DIR = $$PWD/3rdparty/VTK
+OCC_LIB_BASE_DIR = $$PWD/3rdparty/OCC
 VTK_LIB_PRI_PATH = $${VTK_LIB_BASE_DIR}/vtk.pri
 OCC_LIB_PRI_PATH = $${OCC_LIB_BASE_DIR}/occ.pri
 
