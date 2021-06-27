@@ -17,10 +17,14 @@ $$saCopyLibToBin($${TARGET})
 
 HEADERS += \
     FCColorPickerButton.h \
-    FCCommonWidgetsAPI.h
+    FCCommonWidgetsAPI.h \
+    FCCoordinatesWidget.h \
+    FCPathLineEdit.h
 
 SOURCES += \ \
-    FCColorPickerButton.cpp
+    FCColorPickerButton.cpp \
+    FCCoordinatesWidget.cpp \
+    FCPathLineEdit.cpp
 
 
 
