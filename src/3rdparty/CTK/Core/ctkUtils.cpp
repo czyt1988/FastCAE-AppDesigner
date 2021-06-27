@@ -48,7 +48,7 @@ void ctk::qListToSTLVector(const QStringList& list,
     {
     // Allocate memory
     char* str = new char[list[i].size()+1];
-    strcpy(str, list[i].toLatin1());
+    strcpy(str, list[i].toUtf8());
     vector[i] = str;
     }
 }
@@ -100,7 +100,11 @@ QStringList ctk::nameFilterToExtensions(const QString& nameFilter)
     return QStringList();
     }
   QString f = regexp.cap(2);
+  #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+  return f.split(QLatin1Char(' '), Qt::SkipEmptyParts);
+  #else
   return f.split(QLatin1Char(' '), QString::SkipEmptyParts);
+  #endif
 }
 
 //-----------------------------------------------------------------------------
@@ -308,7 +312,7 @@ bool ctk::removeDirRecursively(const QString & dirName)
   bool result = false;
   QDir dir(dirName);
 
-  if (dir.exists(dirName))
+  if (dir.exists())
     {
     foreach (QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
       {
@@ -326,14 +330,15 @@ bool ctk::removeDirRecursively(const QString & dirName)
         return result;
         }
       }
-    result = dir.rmdir(dirName);
+    QDir parentDir(QFileInfo(dirName).absolutePath());
+    result = parentDir.rmdir(dirName);
     }
 
   return result;
 }
 
 //-----------------------------------------------------------------------------
-bool ctk::copyDirRecursively(const QString &srcPath, const QString &dstPath)
+bool ctk::copyDirRecursively(const QString &srcPath, const QString &dstPath, bool includeHiddenFiles)
 {
   // See http://stackoverflow.com/questions/2536524/copy-directory-using-qt
   if (!QFile::exists(srcPath))
@@ -357,13 +362,19 @@ bool ctk::copyDirRecursively(const QString &srcPath, const QString &dstPath)
     return false;
     }
 
-  foreach(const QFileInfo &info, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+  QDir::Filter hiddenFilter;
+  if(includeHiddenFiles)
+    {
+    hiddenFilter = QDir::Hidden;
+    }
+
+  foreach(const QFileInfo &info, srcDir.entryInfoList(QDir::Dirs | QDir::Files | hiddenFilter | QDir::NoDotAndDotDot))
     {
     QString srcItemPath = srcPath + "/" + info.fileName();
     QString dstItemPath = dstPath + "/" + info.fileName();
     if (info.isDir())
       {
-      if (!ctk::copyDirRecursively(srcItemPath, dstItemPath))
+      if (!ctk::copyDirRecursively(srcItemPath, dstItemPath, includeHiddenFiles))
         {
         qCritical() << "ctk::copyDirRecursively: Failed to copy files from " << srcItemPath << " into " << dstItemPath;
         return false;
@@ -401,4 +412,54 @@ qint64 ctk::msecsTo(const QDateTime& t1, const QDateTime& t2)
 
   return static_cast<qint64>(utcT1.daysTo(utcT2)) * static_cast<qint64>(1000*3600*24)
       + static_cast<qint64>(utcT1.time().msecsTo(utcT2.time()));
+}
+
+//------------------------------------------------------------------------------
+QString ctk::absolutePathFromInternal(const QString& internalPath, const QString& basePath)
+{
+  if (internalPath.isEmpty())
+  {
+    return internalPath;
+  }
+  if (QFileInfo(internalPath).isRelative())
+  {
+    QDir baseDirectory(basePath);
+    return QDir::cleanPath(baseDirectory.filePath(internalPath));
+  }
+  else
+  {
+    return internalPath;
+  }
+}
+
+//------------------------------------------------------------------------------
+QString ctk::internalPathFromAbsolute(const QString& absolutePath, const QString& basePath)
+{
+  if (absolutePath.isEmpty())
+  {
+    return absolutePath;
+  }
+  // Make it a relative path if it is within the base folder
+  if (QFileInfo(absolutePath).isRelative())
+  {
+    // already relative path, return it as is
+    return absolutePath;
+  }
+  QString baseFolderClean = QDir::cleanPath(QDir::fromNativeSeparators(basePath));
+  QString absolutePathClean = QDir::cleanPath(QDir::fromNativeSeparators(absolutePath));
+#ifdef Q_OS_WIN32
+  Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive;
+#else
+  Qt::CaseSensitivity sensitivity = Qt::CaseSensitive;
+#endif
+  if (absolutePathClean.startsWith(baseFolderClean, sensitivity))
+  {
+    // file is in the base folder, make it a relative path
+    // (remove size+1 to remove the leading forward slash)
+    return absolutePathClean.remove(0, baseFolderClean.size() + 1);
+  }
+  else
+  {
+    return absolutePath;
+  }
 }

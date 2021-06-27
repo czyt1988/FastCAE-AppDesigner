@@ -1,9 +1,9 @@
 include(./../common.pri)
 include(./../function.pri)
-LIB_NAME=$$saLibNameMake(FCD3Viewer)
+LIB_NAME=$$saLibNameMake(FCCommonWidgets)
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
-include($${VTK_LIB_PRI_PATH})
-include($${OCC_LIB_PRI_PATH})
+INCLUDEPATH += $${CTK_INCLUDE_PATHS}
+DEPENDPATH += $${CTK_INCLUDE_PATHS}
 LIBS += -L$${BIN_LIB_DIR} -l$${LIB_NAME}
 

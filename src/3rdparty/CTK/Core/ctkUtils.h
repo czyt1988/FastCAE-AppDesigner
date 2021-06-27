@@ -24,11 +24,26 @@
 // Qt includes
 #include <QStringList>
 #include <QDateTime>
+#include <QDebug>
 
 // STD includes
 #include <vector>
 
 #include "ctkCoreExport.h"
+
+/// This macro can be used instead of Q_ASSERT to warn developers
+/// when some assumption fails. CTK_SOFT_ASSERT behavior differs
+/// in two key aspects: (1) it only logs a warning (instead of terminating
+/// the application) and (2) the message is always logged (instead of
+/// ignoring the check in release builds).
+#define CTK_SOFT_ASSERT(condition) do \
+  { \
+    if (! (condition) ) \
+    { \
+      qWarning() << "Assertion `" #condition "` failed in " << __FILE__ \
+                 << " line " << __LINE__; \
+    } \
+  } while (false)
 
 namespace ctk {
 ///
@@ -124,12 +139,15 @@ bool CTK_CORE_EXPORT removeDirRecursively(const QString & dirName);
 
 ///
 /// \ingroup Core
-/// Copy a directory recursively
+/// \brief Copy a directory recursively.
+///
+/// Setting <code>includeHiddenFiles</code> to <code>false</code> allows to skip the copy of hidden files.
+///
 /// \param srcPath The directory to be copied
 /// \param dstPath The directory where the file should be copied
 /// \return <code>true</code> on success, <code>false</code> otherwise.
 /// \sa QFile::copy
-bool CTK_CORE_EXPORT copyDirRecursively(const QString &srcPath, const QString &dstPath);
+bool CTK_CORE_EXPORT copyDirRecursively(const QString &srcPath, const QString &dstPath, bool includeHiddenFiles=true);
 
 ///
 /// \ingroup Core
@@ -149,6 +167,17 @@ QString CTK_CORE_EXPORT qtHandleToString(Qt::HANDLE handle);
 /// a QDateTime::msecsTo() method which should be used instead, after
 /// bumping the minimum required Qt version for CTK.
 qint64 CTK_CORE_EXPORT msecsTo(const QDateTime& t1, const QDateTime& t2);
+
+/// Get absolute path from an "internal" path. If internal path is already an absolute path
+/// then that is returned unchanged. If internal path is relative path then basePath is used
+/// as a basis (prepended to internalPath).
+QString CTK_CORE_EXPORT absolutePathFromInternal(const QString& internalPath, const QString& basePath);
+
+/// Get "internal" path from an absolute path. internalPath will be a relative path if
+/// absolutePath is within the basePath, otherwise interalPath will be the same as absolutePath.
+/// This is useful for paths/directories relative to a base folder, to make the data or application relocatable.
+/// Absolute path can be retrieved from an internal path using absolutePathFromInternal function.
+QString CTK_CORE_EXPORT internalPathFromAbsolute(const QString& absolutePath, const QString& basePath);
 
 }
 

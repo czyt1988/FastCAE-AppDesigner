@@ -37,7 +37,7 @@ class ctkValueProxy;
 /// \ingroup Widgets
 ///
 /// ctkRangeWidget is a wrapper around a ctkDoubleRangeSlider and 2 QSpinBoxes
-/// \image html http://www.commontk.org/images/1/14/CtkRangeWidget.png
+/// \image html http://commontk.org/images/1/14/CtkRangeWidget.png
 /// \sa ctkSliderSpinBoxWidget, ctkDoubleRangeSlider, QSpinBox
 class CTK_WIDGETS_EXPORT ctkRangeWidget : public QWidget
 {
@@ -56,6 +56,8 @@ class CTK_WIDGETS_EXPORT ctkRangeWidget : public QWidget
   Q_PROPERTY(Qt::Alignment spinBoxAlignment READ spinBoxAlignment WRITE setSpinBoxAlignment)
   Q_PROPERTY(bool tracking READ hasTracking WRITE setTracking)
   Q_PROPERTY(bool symmetricMoves READ symmetricMoves WRITE setSymmetricMoves)
+  Q_PROPERTY(double customSpinBoxesLimitsMin READ customSpinBoxesLimitsMin)
+  Q_PROPERTY(double customSpinBoxesLimitsMax READ customSpinBoxesLimitsMax)
 
 public:
   /// Superclass typedef
@@ -88,7 +90,7 @@ public:
   virtual void setMaximum(double maximum);
   /// Description
   /// Utility function that set the min/max in once
-  virtual void setRange(double min, double max);
+  Q_INVOKABLE virtual void setRange(double min, double max);
   virtual void range(double minimumAndMaximum[2])const;
 
   ///
@@ -178,6 +180,12 @@ public:
   /// symmetrically, otherwise the handles are independent. False by default
   virtual bool symmetricMoves()const;
   virtual void setSymmetricMoves(bool symmetry);
+
+  ///
+  /// This property sets custom limits for spin boxes.
+  virtual void setCustomSpinBoxesLimits(double min, double max);
+  virtual double customSpinBoxesLimitsMin()const;
+  virtual double customSpinBoxesLimitsMax()const;
 
   /// Return the slider of the range widget.
   /// \sa minimumSpinBox(), maximumSpinBox()

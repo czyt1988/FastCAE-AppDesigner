@@ -1,4 +1,3 @@
-#TEMPLATE	=   app
 QT          +=  core gui widgets
 #QT += opengl
 TEMPLATE = lib
@@ -21,7 +20,7 @@ HEADERS += \
     FCCoordinatesWidget.h \
     FCPathLineEdit.h
 
-SOURCES += \ \
+SOURCES += \
     FCColorPickerButton.cpp \
     FCCoordinatesWidget.cpp \
     FCPathLineEdit.cpp

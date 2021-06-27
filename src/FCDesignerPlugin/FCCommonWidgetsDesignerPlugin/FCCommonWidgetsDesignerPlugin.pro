@@ -16,22 +16,22 @@ QT += widgets core gui
 # 插件默认的配置
 TEMPLATE = lib
 CONFIG += c++11
-TARGET = $$saLibNameMake(FCD3ViewerDesignerPlugin)
+TARGET = $$saLibNameMake(FCCommonWidgetsDesignerPlugin)
 
 #target.path = $$[QT_INSTALL_PLUGINS]/designer
 #生成的dll路径
 $$commonProLibSet($${TARGET})
 
-include($${FC_SRC_DIR}/FCD3Viewer/FCD3Viewer.pri)
+include($${FC_SRC_DIR}/FCCommonWidgets/FCCommonWidgets.pri)
 
 HEADERS += \
-    FCD3ViewerCollectionInterface.h \
-    FCD3ViewerDesignerPlugin.h
+    FCCommonWidgetsCollectionInterface.h \
+    FCCommonWidgetsDesignerPlugin.h
 
 
 SOURCES += \
-    FCD3ViewerCollectionInterface.cpp \
-    FCD3ViewerDesignerPlugin.cpp
+    FCCommonWidgetsCollectionInterface.cpp \
+    FCCommonWidgetsDesignerPlugin.cpp
 
 
 # 编译完成后自动把dll移动到$$[QT_INSTALL_PLUGINS]/designer下面

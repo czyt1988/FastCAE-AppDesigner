@@ -18,17 +18,17 @@ $$saCopyLibToBin($${TARGET})
 HEADERS += \
         $$PWD/FCD3ViewerAPI.h \
         $$PWD/FCD3Viewer.h \
-        FCAbstractGeometryDataIO.h \
-        FCGeometryDataIOResult.h \
-        FCGeometryDataIOWorker.h \
-        FCIgesDataIO.h
+        $$PWD/FCAbstractGeometryDataIO.h \
+        $$PWD/FCGeometryDataIOResult.h \
+        $$PWD/FCGeometryDataIOWorker.h \
+        $$PWD/FCIgesDataIO.h
 
 SOURCES += \
         $$PWD/FCD3Viewer.cpp \
-        FCAbstractGeometryDataIO.cpp \
-        FCGeometryDataIOResult.cpp \
-        FCGeometryDataIOWorker.cpp \
-        FCIgesDataIO.cpp
+        $$PWD/FCAbstractGeometryDataIO.cpp \
+        $$PWD/FCGeometryDataIOResult.cpp \
+        $$PWD/FCGeometryDataIOWorker.cpp \
+        $$PWD/FCIgesDataIO.cpp
 
 RESOURCES += \
     icon.qrc
