@@ -96,6 +96,24 @@ defineReplace(commonProLibSet) {
     return (true)
 }
 
+#通用的App设置 传入生成的App名
+defineReplace(commonProAppSet) {
+    #lib构建在lib目录下
+    TARGET = $$1
+    DESTDIR = $${BIN_DIR}
+    MOC_DIR = $${DESTDIR}/appbuild/$${TARGET}/moc
+    RCC_DIR = $${DESTDIR}/appbuild/$${TARGET}/rcc
+    UI_DIR = $${DESTDIR}/appbuild/$${TARGET}/qui
+    OBJECTS_DIR = $${DESTDIR}/appbuild/$${TARGET}/obj
+    export(TARGET)
+    export(DESTDIR)
+    export(MOC_DIR)
+    export(RCC_DIR)
+    export(UI_DIR)
+    export(OBJECTS_DIR)
+    return (true)
+}
+
 # 此函数针对插件，把
 defineReplace(copyDesignerPluginToQtDesignerPath) {
     LIBNAME = $$1

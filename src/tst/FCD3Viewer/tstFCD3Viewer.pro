@@ -2,15 +2,13 @@ QT          +=  core gui widgets
 TEMPLATE	=   app
 CONFIG		+=  c++11
 CONFIG		+=  qt
-TARGET		=   tst_FCD3Viewer
 
 include($$PWD/../../common.pri)
+include($$PWD/../function.pri)
 
-DESTDIR = $${BIN_DIR}
-MOC_DIR = $${DESTDIR}/build/$${TARGET}/moc
-RCC_DIR = $${DESTDIR}/build/$${TARGET}/rcc
-UI_DIR = $${DESTDIR}/build/$${TARGET}/qui
-OBJECTS_DIR = $${DESTDIR}/build/$${TARGET}/obj
+TARGET = tst_FCD3Viewer
+#生成到bin下
+$$commonProAppSet($${TARGET})
 
 HEADERS += \
         $$PWD/MainWindow.h
