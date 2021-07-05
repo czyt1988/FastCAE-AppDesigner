@@ -34,6 +34,7 @@ FCNode::FCNode(FCNode&& other)
 FCNode::~FCNode()
 {
     //析构过程，所有连接进行清除操作
+    d_ptr->detachAll();
 }
 
 

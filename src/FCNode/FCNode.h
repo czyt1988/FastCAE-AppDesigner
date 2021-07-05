@@ -1,7 +1,6 @@
 ﻿#ifndef FCNODE_H
 #define FCNODE_H
 #include "FCNodeGlobal.h"
-#include "FCGlobals.h"
 #include <QVariant>
 #include <QRectF>
 #include <QPixmap>

@@ -1,30 +1,17 @@
 ﻿#include "FCNodeLink.h"
 #include "FCNode.h"
 #include "FCNode_p.h"
-class FCNodeLinkPrivate {
-public:
-    FC_IMPL_PUBLIC(FCNodeLink)
-    FCNodeLinkPrivate(FCNodeLink *p);
-    FCNode *_fromNode;
-    FCNode *_toNode;
-};
 
-FCNodeLinkPrivate::FCNodeLinkPrivate(FCNodeLink *p) : q_ptr(p)
-    , _fromNode(nullptr)
-    , _toNode(nullptr)
-{
-}
-
-
-////////////////////////////////////////////////////////////////
-
-FCNodeLink::FCNodeLink()
+FCNodeLink::FCNodeLink() : d_ptr(new FCNodeLinkPrivate(this))
 {
 }
 
 
 FCNodeLink::~FCNodeLink()
 {
+    //节点删除时，把node的连接剔除
+    disattachFrom();
+    disattachTo();
 }
 
 
@@ -36,16 +23,12 @@ FCNodeLink::~FCNodeLink()
  */
 bool FCNodeLink::attachFrom(FCNode *node, const QString& connectPointName)
 {
-    if (d_ptr->_fromNode) {
-        //不需要判断名字，有可能改变连接，仅仅需要断开之前的连接
-        //node断开此链接
-        d_ptr->_fromNode->d_ptr->removeLink(this);
-    }
     if (nullptr == node) {
+        disattachFrom();
         d_ptr->_fromNode = nullptr;
         return (true);
-    }
-    if (node->isHaveConnectPoint(connectPointName)) {
+    }else if (node->isHaveConnectPoint(connectPointName)) {
+        disattachFrom();
         d_ptr->_fromNode = node;
         return (true);
     }
@@ -55,20 +38,38 @@ bool FCNodeLink::attachFrom(FCNode *node, const QString& connectPointName)
 
 bool FCNodeLink::attachTo(FCNode *node, const QString& connectPointName)
 {
+    if (nullptr == node) {
+        disattachTo();
+        d_ptr->_toNode = nullptr;
+        return (true);
+    }else if (node->isHaveConnectPoint(connectPointName)) {
+        disattachTo();
+        d_ptr->_toNode = node;
+        return (true);
+    }
+    return (false);
+}
+
+
+void FCNodeLink::disattachFrom()
+{
+    if (d_ptr->_fromNode) {
+        //不需要判断名字，有可能改变连接，仅仅需要断开之前的连接
+        //node断开此链接
+        d_ptr->_fromNode->d_ptr->removeLink(this);
+    }
+    d_ptr->_fromNode = nullptr;
+}
+
+
+void FCNodeLink::disattachTo()
+{
     if (d_ptr->_toNode) {
         //不需要判断名字，有可能改变连接，仅仅需要断开之前的连接
         //node断开此链接
         d_ptr->_toNode->d_ptr->removeLink(this);
     }
-    if (nullptr == node) {
-        d_ptr->_toNode = nullptr;
-        return (true);
-    }
-    if (node->isHaveConnectPoint(connectPointName)) {
-        d_ptr->_toNode = node;
-        return (true);
-    }
-    return (false);
+    d_ptr->_toNode = nullptr;
 }
 
 
@@ -105,4 +106,16 @@ bool FCNodeLink::isHaveFromNode() const
 bool FCNodeLink::isHaveToNode() const
 {
     return (d_ptr->_toNode != nullptr);
+}
+
+
+void FCNodeLink::_disattachTo()
+{
+    d_ptr->_toNode = nullptr;
+}
+
+
+void FCNodeLink::_disattachFrom()
+{
+    d_ptr->_fromNode = nullptr;
 }

@@ -17,13 +17,15 @@ HEADERS += \
     FCNode.h \
     FCNodeGlobal.h \
     FCNodeLink.h \
-    FCNode_p.h
+    FCNode_p.h \
+    FCNodesManager.h
 
 
 SOURCES += \
     FCNode.cpp \
     FCNodeLink.cpp \
-    FCNode_p.cpp
+    FCNode_p.cpp \
+    FCNodesManager.cpp
 
 
 

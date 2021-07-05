@@ -30,6 +30,10 @@ void FCNodePrivate::copy(const FCNodePrivate *other)
 }
 
 
+/**
+ * @brief 移除连接
+ * @param link
+ */
 void FCNodePrivate::removeLink(FCNodeLink *link)
 {
     for (auto i = _linkMap.begin(); i != _linkMap.end(); ++i)
@@ -39,4 +43,37 @@ void FCNodePrivate::removeLink(FCNodeLink *link)
             return;
         }
     }
+}
+
+
+/**
+ * @brief 把所有连接进行解绑操作
+ *
+ * 此函数仅仅在析构时调用
+ */
+void FCNodePrivate::detachAll()
+{
+    for (auto i = _linkMap.begin(); i != _linkMap.end(); ++i)
+    {
+        QList<FCNodeLink *> vs = _linkMap.values(i.key());
+        for (FCNodeLink *v : vs)
+        {
+            //先把link断开node的连接
+            if (v->to() == q_ptr) {
+                v->_disattachTo();
+            }else if (v->from() == q_ptr) {
+                v->_disattachFrom();
+            }
+        }
+    }
+}
+
+
+//////////////////////////////////////////////////////////
+
+
+FCNodeLinkPrivate::FCNodeLinkPrivate(FCNodeLink *p) : q_ptr(p)
+    , _fromNode(nullptr)
+    , _toNode(nullptr)
+{
 }
