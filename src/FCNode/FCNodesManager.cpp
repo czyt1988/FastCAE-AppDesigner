@@ -7,6 +7,8 @@ public:
 
     QList<FCNode *> _nodes;
     QList<FCNodeLink *> _links;
+    QMap<FCNode *, FCNodesManager::LanguageDict> _nodeToLanguage;   ///< 保存了所有节点对应的翻译字典
+    QHash<QString, FCNode *> _prototypeToNode;                           ///< 记录类型对应的节点，这个节点会创建一份
 };
 
 
@@ -25,8 +27,14 @@ void FCNodesManagerPrivate::destory()
     {
         delete n;
     }
+    for (auto v : _prototypeToNode)
+    {
+        delete v;
+    }
     _nodes.clear();
     _links.clear();
+    _nodeToLanguage.clear();
+    _prototypeToNode.clear();
 }
 
 
@@ -43,6 +51,21 @@ FCNodesManager::~FCNodesManager()
 }
 
 
+void FCNodesManager::recordNode(FCNode *node)
+{
+    d_ptr->_nodes.append(node);
+    if(!d_ptr->_prototypeToNode.contains(node->getNodePrototype())){
+        registeNodePrototype(node);
+    }
+}
+
+
+void FCNodesManager::recordNodeLink(FCNodeLink *link)
+{
+    d_ptr->_links.append(link);
+}
+
+
 /**
  * @brief 创建一个节点,并管理
  * @note 节点的内存由FCNodesManager来管理
@@ -52,8 +75,28 @@ FCNode *FCNodesManager::createNode()
 {
     FCNode *n = new FCNode();
 
-    d_ptr->_nodes.append(n);
+    recordNode(n);
     return (n);
+}
+
+
+/**
+ * @brief 通过类型创建一个节点，
+ * 此节点必须通过setNodeType操作过manager才会记住这个类型对应的节点
+ * @param type
+ * @return
+ * @sa setNodeType
+ */
+FCNode *FCNodesManager::createNodeFromPrototype(const QString& prototype)
+{
+    FCNode *base = d_ptr->_prototypeToNode.value(prototype, nullptr);
+
+    if (base) {
+        FCNode *real = base->copy();
+        recordNode(real);
+        return (real);
+    }
+    return (nullptr);
 }
 
 
@@ -66,7 +109,7 @@ FCNodeLink *FCNodesManager::createNodeLink()
 {
     FCNodeLink *n = new FCNodeLink();
 
-    d_ptr->_links.append(n);
+    recordNodeLink(n);
     return (n);
 }
 
@@ -125,4 +168,52 @@ FCNode *FCNodesManager::copyNode(FCNode *other)
 
     d_ptr->_nodes.append(n);
     return (n);
+}
+
+
+void FCNodesManager::translate(FCNode *node)
+{
+    translate(node, QLocale().language());
+}
+
+
+void FCNodesManager::translate(FCNode *node, QLocale::Language lng)
+{
+    FCNode::StringMap dict = d_ptr->_nodeToLanguage[node][QLocale::languageToString(lng)];
+
+    node->setupStringMap(dict);
+}
+
+
+void FCNodesManager::translate()
+{
+    for (auto i = d_ptr->_nodeToLanguage.begin(); i != d_ptr->_nodeToLanguage.end(); ++i)
+    {
+        translate(i.key());
+    }
+}
+
+
+/**
+ * @brief 设置语言字典
+ * @param node 设置节点
+ * @param dict 语言字典
+ */
+void FCNodesManager::setupLanguageDict(FCNode *node, const FCNodesManager::LanguageDict& dict)
+{
+    d_ptr->_nodeToLanguage[node] = dict;
+}
+
+
+/**
+ * @brief 设置某个node的类型，
+ * manager会记住类型对应的node，
+ * 通过createNodeFromType函数可以创建设置过类型的node
+ * @note 记录的节点是经过复制的，节点设置完类型后删除节点对记忆的节点不影响
+ * @param type
+ * @param node
+ */
+void FCNodesManager::registeNodePrototype(FCNode *node)
+{
+    d_ptr->_prototypeToNode[node->getNodePrototype()] = node->copy();
 }

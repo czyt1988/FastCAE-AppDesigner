@@ -25,11 +25,11 @@ bool FCNodeLink::attachFrom(FCNode *node, const QString& connectPointName)
 {
     if (nullptr == node) {
         disattachFrom();
-        d_ptr->_fromNode = nullptr;
         return (true);
     }else if (node->isHaveConnectPoint(connectPointName)) {
         disattachFrom();
         d_ptr->_fromNode = node;
+        d_ptr->_fromConnectName = connectPointName;
         return (true);
     }
     return (false);
@@ -40,11 +40,11 @@ bool FCNodeLink::attachTo(FCNode *node, const QString& connectPointName)
 {
     if (nullptr == node) {
         disattachTo();
-        d_ptr->_toNode = nullptr;
         return (true);
     }else if (node->isHaveConnectPoint(connectPointName)) {
         disattachTo();
         d_ptr->_toNode = node;
+        d_ptr->_toConnectName = connectPointName;
         return (true);
     }
     return (false);
@@ -59,6 +59,7 @@ void FCNodeLink::disattachFrom()
         d_ptr->_fromNode->d_ptr->removeLink(this);
     }
     d_ptr->_fromNode = nullptr;
+    d_ptr->_fromConnectName = QString();
 }
 
 
@@ -70,6 +71,7 @@ void FCNodeLink::disattachTo()
         d_ptr->_toNode->d_ptr->removeLink(this);
     }
     d_ptr->_toNode = nullptr;
+    d_ptr->_toConnectName = QString();
 }
 
 
@@ -106,6 +108,52 @@ bool FCNodeLink::isHaveFromNode() const
 bool FCNodeLink::isHaveToNode() const
 {
     return (d_ptr->_toNode != nullptr);
+}
+
+
+/**
+ * @brief 得到连接点名字
+ * @return
+ */
+QString FCNodeLink::fromConnectName() const
+{
+    return (d_ptr->_fromConnectName);
+}
+
+
+/**
+ * @brief 得到连接点名字
+ * @return
+ */
+QString FCNodeLink::toConnectName() const
+{
+    return (d_ptr->_toConnectName);
+}
+
+
+/**
+ * @brief 获取连接点的点相对node的位置，如果没有node将返回一个无效的QPointF
+ * @return
+ */
+QPointF FCNodeLink::getFromNodeConnectPoint() const
+{
+    if (d_ptr->_fromNode) {
+        return (d_ptr->_fromNode->getConnectPoint(d_ptr->_fromConnectName));
+    }
+    return (QPointF());
+}
+
+
+/**
+ * @brief 获取连接点的点相对node的位置，如果没有node将返回一个无效的QPointF
+ * @return
+ */
+QPointF FCNodeLink::getToNodeConnectPoint() const
+{
+    if (d_ptr->_toNode) {
+        return (d_ptr->_toNode->getConnectPoint(d_ptr->_toConnectName));
+    }
+    return (QPointF());
 }
 
 

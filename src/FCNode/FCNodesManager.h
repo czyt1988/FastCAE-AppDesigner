@@ -20,11 +20,21 @@ class FCNODE_API FCNodesManager
 {
     FC_IMPL(FCNodesManager)
 public:
+    typedef QHash<QString, FCNode::StringMap> LanguageDict;
     FCNodesManager();
     virtual ~FCNodesManager();
 
+    //记录node，此时node的所有权归属于FCNodesManager
+    void recordNode(FCNode *node);
+
+    //记录nodelink，此时nodelink的所有权归属于FCNodesManager
+    void recordNodeLink(FCNodeLink *link);
+
     //创建一个节点
     FCNode *createNode();
+
+    //通过类型创建一个节点，此节点必须通过setNodeType操作过manager才会记住这个类型对应的节点
+    FCNode *createNodeFromPrototype(const QString& prototype);
 
     //创建连接
     FCNodeLink *createNodeLink();
@@ -43,6 +53,21 @@ public:
 
     //复制一个节点
     FCNode *copyNode(FCNode *other);
+
+    //通过当前的QLacal翻译某一个node
+    void translate(FCNode *node);
+
+    //通过语言翻译node里的内容
+    void translate(FCNode *node, QLocale::Language lng);
+
+    //翻译所有的node,根据Qlocale
+    void translate();
+
+    //建立语言字典
+    void setupLanguageDict(FCNode *node, const LanguageDict& dict);
+
+    //设置某个node的类型，manager会记住类型对应的node，通过createNodeFromPrototype函数可以创建设置过类型的node
+    void registeNodePrototype(FCNode *node);
 };
 
 #endif // FCNODESMANAGER_H

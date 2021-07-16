@@ -1,6 +1,8 @@
 ﻿#include "FCMethodEditorMainWindow.h"
 
 #include <QApplication>
+#include <QDebug>
+#include <QLocale>
 
 int main(int argc, char *argv[])
 {
@@ -8,5 +10,6 @@ int main(int argc, char *argv[])
     FCMethodEditorMainWindow w;
 
     w.show();
+
     return (a.exec());
 }

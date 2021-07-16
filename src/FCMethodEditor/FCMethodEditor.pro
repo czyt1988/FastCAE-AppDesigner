@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,20 +21,39 @@ TARGET = MethodEditor
 $$commonProAppSet($${TARGET})
 
 SOURCES += \
+    FCGraphicsNodeItem.cpp \
+    FCGraphicsNodeLinkLineItem.cpp \
+    FCGraphicsScene.cpp \
+    FCGraphicsView.cpp \
     FCMethodEditorMainWindow.cpp \
+    FCNodeGraphicsView.cpp \
     FCNodeListWidget.cpp \
+    FCNodeTemplate.cpp \
+    FCProject.cpp \
     FCToolBox.cpp \
     main.cpp
 
 HEADERS += \
+    FCGraphicsItemType.h \
+    FCGraphicsNodeItem.h \
+    FCGraphicsNodeLinkLineItem.h \
+    FCGraphicsScene.h \
+    FCGraphicsView.h \
     FCMethodEditorMainWindow.h \
+    FCNodeGraphicsView.h \
     FCNodeListWidget.h \
+    FCNodeTemplate.h \
+    FCProject.h \
     FCToolBox.h
 
 FORMS += \
     FCMethodEditorMainWindow.ui
 
+include($$PWD/Mime/Mime.pri)
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+include($${FC_SRC_DIR}/FCNode/FCNode.pri)

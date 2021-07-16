@@ -13,7 +13,28 @@
   <property name="windowTitle">
    <string>MethodMainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="FCNodeGraphicsView" name="graphicsView"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -42,7 +63,7 @@
    <addaction name="menuedit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="dockWidgetTemplate">
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
@@ -50,7 +71,7 @@
     <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget_2">
+  <widget class="QDockWidget" name="dockWidgetSetting">
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
@@ -88,6 +109,11 @@
    <extends>QWidget</extends>
    <header>FCToolBox.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FCNodeGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>FCNodeGraphicsView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

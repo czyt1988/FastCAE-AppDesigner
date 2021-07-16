@@ -39,12 +39,32 @@ FCNode::~FCNode()
 
 
 /**
+ * @brief 节点的名字
+ * @return
+ */
+QString FCNode::getNodeName() const
+{
+    return (d_ptr->string(d_ptr->_name));
+}
+
+
+/**
+ * @brief 节点的名字设置
+ * @param name
+ */
+void FCNode::setNodeName(const QString& name)
+{
+    d_ptr->_name = name;
+}
+
+
+/**
  * @brief 节点描述
  * @return
  */
 QString FCNode::getDescribe() const
 {
-    return (d_ptr->_describe);
+    return (d_ptr->string(d_ptr->_describe));
 }
 
 
@@ -184,6 +204,19 @@ QList<QString> FCNode::connectPointNames() const
 
 
 /**
+ * @brief 把connectPointName转换为描述的名字，
+ * connectPointName是一个类似id，connectPointDescribeName才是真实的名字
+ *
+ * @param connectPointName
+ * @return
+ */
+QString FCNode::connectPointNameToDescribeName(const QString& connectPointName) const
+{
+    return (d_ptr->string(connectPointName));
+}
+
+
+/**
  * @brief 获取节点在Graph View中的位置信息
  * @return
  */
@@ -248,6 +281,43 @@ FCNode *FCNode::copy() const
 
 
 /**
+ * @brief 设置字典，字典是用于多语言情况下，的映射，
+ *
+ * 例如:这时候setDescribe的内容就是"id"，字典中有"id"->"真实describe的文字"，
+ * getDescribe函数获取的内容就是"真实describe的文字"
+ *
+ * 但ConnectPoint不一样，ConnectPoint是根据名字进行定位，
+ * @param dict
+ */
+void FCNode::setupStringMap(const QHash<QString, QString>& dict)
+{
+    d_ptr->_stringMap = dict;
+}
+
+
+/**
+ * @brief 取node的类型，这个类型可以表征同一类型的node
+ * @return 这个不会进行翻译
+ */
+QString FCNode::getNodePrototype() const
+{
+    return (d_ptr->_prototype);
+}
+
+
+/**
+ * @brief 设置类型
+ *
+ * 此操作只能由FCNodesManager进行
+ * @param type
+ */
+void FCNode::setNodePrototype(const QString& type)
+{
+    d_ptr->_prototype = type;
+}
+
+
+/**
  * @brief 设置节点的数据
  * @param d
  * @param role 角色，默认为0，如果需要设置多个数据可以使用其他角色
@@ -266,4 +336,21 @@ void FCNode::setData(QVariant d, int role)
 QVariant FCNode::getData(int role) const
 {
     return (d_ptr->_dataMap.value(role));
+}
+
+
+QDebug operator <<(QDebug debug, const FCNode& node)
+{
+    QDebugStateSaver saver(debug);
+
+    debug.nospace()
+        << "type["<<node.getNodePrototype()<<"] name:" << node.getNodeName()
+        << "\nDescribe:" << node.getDescribe()
+        << "\npos:" << node.getPos()
+        << "\nRotation:" << node.getRotation()
+        << "\nBoundingRect:" << node.getBoundingRect()
+        << "\nConnectPointCount:" << node.getConnectPointCount()
+    ;
+
+    return (debug);
 }

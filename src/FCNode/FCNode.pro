@@ -1,5 +1,5 @@
 #TEMPLATE	=   app
-QT          +=  core gui widgets
+QT          +=  core xml
 TEMPLATE = lib
 DEFINES += FCNODE_BUILDLIB
 CONFIG		+=  c++11
@@ -18,14 +18,18 @@ HEADERS += \
     FCNodeGlobal.h \
     FCNodeLink.h \
     FCNode_p.h \
-    FCNodesManager.h
+    FCNodesLoader.h \
+    FCNodesManager.h \
+    FCProperties.h
 
 
 SOURCES += \
     FCNode.cpp \
     FCNodeLink.cpp \
     FCNode_p.cpp \
-    FCNodesManager.cpp
+    FCNodesLoader.cpp \
+    FCNodesManager.cpp \
+    FCProperties.cpp
 
 
 

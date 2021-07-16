@@ -4,6 +4,7 @@
 #include <QVariant>
 #include <QRectF>
 #include <QPixmap>
+#include <QDebug>
 FC_IMPL_FORWARD_DECL(FCNode)
 
 /**
@@ -14,15 +15,21 @@ class FCNODE_API FCNode
 {
     FC_IMPL(FCNode)
     friend class FCNodeLink;
+    friend class FCNodesManager;
 public:
+    typedef  QHash<QString, QString> StringMap;
     FCNode();
     FCNode(const FCNode& other);
     FCNode(FCNode&& other);
     virtual ~FCNode();
+
+    //获取node的名字
+    QString getNodeName() const;
+    void setNodeName(const QString& name);
+
     //获取描述
     QString getDescribe() const;
     void setDescribe(const QString& describe);
-
 
     //节点的范围
     QRectF getBoundingRect() const;
@@ -52,6 +59,9 @@ public:
     //获取所有连接点
     QList<QString> connectPointNames() const;
 
+    //把connectPointName转换为描述的名字，connectPointName是一个类似id，connectPointDescribeName才是真实的名字
+    QString connectPointNameToDescribeName(const QString& connectPointName) const;
+
     //节点在画布位置
     QPointF getPos() const;
     void setPos(const QPointF& pos);
@@ -67,6 +77,17 @@ public:
 
     //复制一个实例，这个是一个工厂函数，需要自己手动销毁
     virtual FCNode *copy() const;
+
+    //设置字典
+    void setupStringMap(const QHash<QString, QString>& dict);
+
+    //获取node的类型，这个类型可以表征同一类型的node 这个不会进行翻译
+    QString getNodePrototype() const;
+    void setNodePrototype(const QString& type);
+
+protected:
 };
+
+FCNODE_API QDebug operator <<(QDebug debug, const FCNode& node);
 
 #endif // FCNODE_H

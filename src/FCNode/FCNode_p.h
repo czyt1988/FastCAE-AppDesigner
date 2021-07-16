@@ -26,6 +26,10 @@ public:
     //把所有连接都断开此节点，此函数仅仅在析构时调用
     void detachAll();
 
+    //返回string对应的字典结果，如果没有QString _name;查找到，就返回id自身
+    QString string(const QString& id);
+
+public:
     QString _name;
     QString _describe;
     QRectF _boundingRect;
@@ -35,7 +39,9 @@ public:
     QPointF _pos;
     qreal _rotation;
     QMap<int, QVariant> _dataMap;
-    QMultiHash<QString, FCNodeLink *> _linkMap;///< 记录所有点的连接线
+    QMultiHash<QString, FCNodeLink *> _linkMap;     ///< 记录所有点的连接线
+    QHash<QString, QString> _stringMap;             ///< 翻译字典，针对多语言，再调用返回String的情况下，都会调用这个查找对应的
+    QString _prototype;                             ///< prototype,用于表征同一类型的node
 };
 
 /**
@@ -48,6 +54,8 @@ public:
     FCNodeLinkPrivate(FCNodeLink *p);
     FCNode *_fromNode;
     FCNode *_toNode;
+    QString _fromConnectName;
+    QString _toConnectName;
 };
 
 #endif // FCNODE_P_H

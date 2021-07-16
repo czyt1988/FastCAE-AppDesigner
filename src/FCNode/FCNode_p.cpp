@@ -27,6 +27,8 @@ void FCNodePrivate::copy(const FCNodePrivate *other)
     _pos = other->_pos;
     _rotation = other->_rotation;
     _dataMap = other->_dataMap;
+    _stringMap = other->_stringMap;
+    _prototype = other->_prototype;
 }
 
 
@@ -66,6 +68,17 @@ void FCNodePrivate::detachAll()
             }
         }
     }
+}
+
+
+QString FCNodePrivate::string(const QString& id)
+{
+    auto i = _stringMap.find(id);
+
+    if (i == _stringMap.end()) {
+        return (id);
+    }
+    return (i.value());
 }
 
 

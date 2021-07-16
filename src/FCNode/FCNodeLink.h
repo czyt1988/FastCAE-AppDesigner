@@ -1,6 +1,7 @@
 ﻿#ifndef FCNODELINK_H
 #define FCNODELINK_H
 #include "FCNodeGlobal.h"
+#include <QPointF>
 FC_IMPL_FORWARD_DECL(FCNodeLink)
 class FCNode;
 
@@ -33,6 +34,14 @@ public:
     //判断是否存在节点
     bool isHaveFromNode() const;
     bool isHaveToNode() const;
+
+    //得到连接点名字
+    QString fromConnectName() const;
+    QString toConnectName() const;
+
+    //获取node的连接点位置
+    QPointF getFromNodeConnectPoint() const;
+    QPointF getToNodeConnectPoint() const;
 
 private:
     //和to节点脱离，此函数并不会对node进行任何操作
