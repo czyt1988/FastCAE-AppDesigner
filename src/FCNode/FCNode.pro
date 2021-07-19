@@ -1,5 +1,5 @@
 #TEMPLATE	=   app
-QT          +=  core xml
+QT          +=  core gui xml widgets
 TEMPLATE = lib
 DEFINES += FCNODE_BUILDLIB
 CONFIG		+=  c++11
@@ -14,8 +14,12 @@ $$commonProLibSet($${TARGET})
 $$saCopyLibToBin($${TARGET})
 
 HEADERS += \
+    FCAbstractNodeGraphicsFactory.h \
+    FCAbstractNodeGraphicsItem.h \
+    FCConstValueNodeGraphicsItem.h \
     FCNode.h \
     FCNodeGlobal.h \
+    FCNodeGraphicsFactory.h \
     FCNodeLink.h \
     FCNode_p.h \
     FCNodesLoader.h \
@@ -24,7 +28,11 @@ HEADERS += \
 
 
 SOURCES += \
+    FCAbstractNodeGraphicsFactory.cpp \
+    FCAbstractNodeGraphicsItem.cpp \
+    FCConstValueNodeGraphicsItem.cpp \
     FCNode.cpp \
+    FCNodeGraphicsFactory.cpp \
     FCNodeLink.cpp \
     FCNode_p.cpp \
     FCNodesLoader.cpp \
