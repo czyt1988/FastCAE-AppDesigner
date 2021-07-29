@@ -1,6 +1,10 @@
-#include "FCNodeGraphicsFactory.h"
+﻿#include "FCAbstractNodeGraphicsFactory.h"
 
-FCNodeGraphicsFactory::FCNodeGraphicsFactory()
+FCAbstractNodeGraphicsFactory::FCAbstractNodeGraphicsFactory(QObject *p) : QObject(p)
 {
+}
 
+
+FCAbstractNodeGraphicsFactory::~FCAbstractNodeGraphicsFactory()
+{
 }

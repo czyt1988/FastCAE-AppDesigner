@@ -33,10 +33,10 @@ defineReplace(saFixPath) {
 defineReplace(saCopyLibCMD) {
     LibName = $$1
     win32 {
-        DIR1 = $${BIN_LIB_DIR}/$${LibName}.dll
+        DIR1 = $${BIN_LIB_BUILD_DIR}/$${LibName}.dll
     }
     unix {
-        DIR1 = $${BIN_LIB_DIR}/$${LibName}.so
+        DIR1 = $${BIN_LIB_BUILD_DIR}/$${LibName}.so
     }
     DIR2 = $${BIN_DIR}/
     DIR_FROM = $$saFixPath($${DIR1})
@@ -78,11 +78,30 @@ defineReplace(saCopyFullPathLibToBin) {
     return (true)
 }
 
+# 把plugin lib拷贝到plugin目录下,arg1为plugin的名称
+defineReplace(saCopyPluginLibToPlugin) {
+    LibName = $$1
+    win32 {
+        DIR1 = $${BIN_PLUGIN_BUILD_DIR}/$${LibName}.dll
+        DIR2 = $${BIN_DIR}/plugins/$${LibName}.dll
+    }
+    unix {
+        DIR1 = $${BIN_PLUGIN_BUILD_DIR}/$${LibName}.so
+        DIR2 = $${BIN_DIR}/plugins/$${LibName}.so
+    }
+    DIR_FROM = $$saFixPath($${DIR1})
+    DIR_TO = $$saFixPath($${DIR2})
+    CMD_CPY = $${QMAKE_COPY} $${DIR_FROM} $${DIR_TO}
+    QMAKE_POST_LINK += $${CMD_CPY}
+    export(QMAKE_POST_LINK)
+    return (true)
+}
+
 #通用的设置 传入生成的lib名
 defineReplace(commonProLibSet) {
     #lib构建在lib目录下
     TARGET = $$1
-    DESTDIR = $${BIN_LIB_DIR}
+    DESTDIR = $${BIN_LIB_BUILD_DIR}
     MOC_DIR = $${DESTDIR}/$${TARGET}/moc
     RCC_DIR = $${DESTDIR}/$${TARGET}/rcc
     UI_DIR = $${DESTDIR}/$${TARGET}/qui
@@ -101,10 +120,28 @@ defineReplace(commonProAppSet) {
     #lib构建在lib目录下
     TARGET = $$1
     DESTDIR = $${BIN_DIR}
-    MOC_DIR = $${DESTDIR}/appbuild/$${TARGET}/moc
-    RCC_DIR = $${DESTDIR}/appbuild/$${TARGET}/rcc
-    UI_DIR = $${DESTDIR}/appbuild/$${TARGET}/qui
-    OBJECTS_DIR = $${DESTDIR}/appbuild/$${TARGET}/obj
+    MOC_DIR = $${BIN_APP_BUILD_DIR}/$${TARGET}/moc
+    RCC_DIR = $${BIN_APP_BUILD_DIR}/$${TARGET}/rcc
+    UI_DIR = $${BIN_APP_BUILD_DIR}/$${TARGET}/qui
+    OBJECTS_DIR = $${BIN_APP_BUILD_DIR}/$${TARGET}/obj
+    export(TARGET)
+    export(DESTDIR)
+    export(MOC_DIR)
+    export(RCC_DIR)
+    export(UI_DIR)
+    export(OBJECTS_DIR)
+    return (true)
+}
+
+#通用的设置 传入生成的plugin lib名
+defineReplace(commonProPluginSet) {
+    #plugin lib构建在lib/plugin目录下
+    TARGET = $$1
+    DESTDIR = $${BIN_PLUGIN_BUILD_DIR}
+    MOC_DIR = $${DESTDIR}/$${TARGET}/moc
+    RCC_DIR = $${DESTDIR}/$${TARGET}/rcc
+    UI_DIR = $${DESTDIR}/$${TARGET}/qui
+    OBJECTS_DIR = $${DESTDIR}/$${TARGET}/obj
     export(TARGET)
     export(DESTDIR)
     export(MOC_DIR)
@@ -119,11 +156,11 @@ defineReplace(copyDesignerPluginToQtDesignerPath) {
     LIBNAME = $$1
     win32 {
         LIBFILENAME = $${LIBNAME}.dll
-        DIR_FROM = $${BIN_LIB_DIR}/$${LIBFILENAME}
+        DIR_FROM = $${BIN_LIB_BUILD_DIR}/$${LIBFILENAME}
     }
     unix {
         LIBFILENAME = $${LIBNAME}.so
-        DIR_FROM = $${BIN_LIB_DIR}/$${LIBFILENAME}
+        DIR_FROM = $${BIN_LIB_BUILD_DIR}/$${LIBFILENAME}
     }
     DIR_FROM = $$saFixPath($${DIR_FROM})
     PLUGINDLL_DESIGNER_PATH = $$[QT_INSTALL_PLUGINS]/designer/$${LIBFILENAME}

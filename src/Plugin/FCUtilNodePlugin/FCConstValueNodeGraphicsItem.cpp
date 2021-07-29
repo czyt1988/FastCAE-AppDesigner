@@ -1,18 +1,17 @@
 ﻿#include "FCConstValueNodeGraphicsItem.h"
+#include <QPainter>
 
-FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem()
+FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem(QGraphicsItem *p)
+    : FCAbstractNodeGraphicsItem(p)
 {
+    metaData().setNodePrototype("FC.Util.Const");
+    metaData().setNodeName(QObject::tr("const"));
+    metaData().setGroup(QObject::tr("common"));
 }
 
 
 FCConstValueNodeGraphicsItem::~FCConstValueNodeGraphicsItem()
 {
-}
-
-
-QString FCConstValueNodeGraphicsItem::getNodePrototype() const
-{
-    return ("FC.Util.Const");
 }
 
 
@@ -69,12 +68,27 @@ bool FCConstValueNodeGraphicsItem::isNull() const
 }
 
 
-QRectF FCConstValueNodeGraphicsItem::boundingRect() const
+void FCConstValueNodeGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->save();
+    QPen pen(Qt::black);
+
+    pen.setWidth(1);
+    painter->setPen(pen);
+    painter->fillRect(boundingRect(), Qt::white);
+    painter->drawRect(boundingRect());
+
+    painter->restore();
 }
 
 
-bool FCConstValueNodeGraphicsItem::checkType()
+QRectF FCConstValueNodeGraphicsItem::boundingRect() const
+{
+    return (QRectF(0, 0, 50, 50));
+}
+
+
+bool FCConstValueNodeGraphicsItem::checkType() const
 {
     switch (m_value.type())
     {

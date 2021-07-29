@@ -1,0 +1,13 @@
+﻿#ifndef FCUTILNODEPLUGINGLOBAL_H
+#define FCUTILNODEPLUGINGLOBAL_H
+#include <QtCore/QtGlobal>
+#include "FCGlobals.h"
+
+#if defined(FCUTILNODEPLUGIN_BUILDLIB)
+#define FCUTILNODEPLUGIN_API    Q_DECL_EXPORT
+#else
+#define  FCUTILNODEPLUGIN_API
+#endif
+
+
+#endif // FCPLUGINGLOBAL_H

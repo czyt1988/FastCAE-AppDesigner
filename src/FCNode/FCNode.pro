@@ -1,5 +1,6 @@
-#TEMPLATE	=   app
-QT          +=  core gui xml widgets
+QT       += core gui xml
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 TEMPLATE = lib
 DEFINES += FCNODE_BUILDLIB
 CONFIG		+=  c++11
@@ -12,31 +13,20 @@ $$commonProLibSet($${TARGET})
 
 # 在lib文件夹下编译完后，把dll文件拷贝到bin目录下
 $$saCopyLibToBin($${TARGET})
-
+include($${FC_SRC_DIR}/FCPlugin/FCPlugin.pri)
 HEADERS += \
     FCAbstractNodeGraphicsFactory.h \
     FCAbstractNodeGraphicsItem.h \
-    FCConstValueNodeGraphicsItem.h \
-    FCNode.h \
+    FCAbstractNodePlugin.h \
     FCNodeGlobal.h \
-    FCNodeGraphicsFactory.h \
-    FCNodeLink.h \
-    FCNode_p.h \
-    FCNodesLoader.h \
-    FCNodesManager.h \
+    FCNodeMetaData.h \
     FCProperties.h
 
 
 SOURCES += \
     FCAbstractNodeGraphicsFactory.cpp \
     FCAbstractNodeGraphicsItem.cpp \
-    FCConstValueNodeGraphicsItem.cpp \
-    FCNode.cpp \
-    FCNodeGraphicsFactory.cpp \
-    FCNodeLink.cpp \
-    FCNode_p.cpp \
-    FCNodesLoader.cpp \
-    FCNodesManager.cpp \
+    FCNodeMetaData.cpp \
     FCProperties.cpp
 
 
