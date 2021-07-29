@@ -13,8 +13,10 @@ CONFIG(debug, debug|release){
 }
 FC_SRC_DIR = $$PWD # 源代码路径
 FC_3RD_PARTY_DIR = $${FC_SRC_DIR}/3rdparty # 第三方库路径
-BIN_LIB_DIR = $$BIN_DIR/libs # 生成的lib路径
-BIN_PLUGIN_BUILD_DIR = $$BIN_DIR/libs/plugin # 生成的plugin路径
+BIN_APP_BUILD_DIR = $$BIN_DIR/build_apps # 生成的app路径
+BIN_LIB_BUILD_DIR = $$BIN_DIR/build_libs # 生成的lib路径
+BIN_PLUGIN_BUILD_DIR = $$BIN_DIR/build_plugins # 生成的plugin路径
+
 VTK_LIB_BASE_DIR = $${FC_3RD_PARTY_DIR}/VTK # 第三方库的VTK路径
 OCC_LIB_BASE_DIR = $${FC_3RD_PARTY_DIR}/OCC # 第三方库的OCC路径
 CTK_LIB_BASE_DIR = $${FC_3RD_PARTY_DIR}/CTK # 第三方库的CTK路径
