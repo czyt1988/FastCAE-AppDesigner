@@ -2,10 +2,10 @@
 #define FCNODELISTWIDGET_H
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <FCNode.h>
+#include "FCNodeMetaData.h"
 class FCNodeListWidgetItem : public QListWidgetItem {
 public:
-    FCNodeListWidgetItem(const FCNode *node, QListWidget *listview = nullptr);
+    FCNodeListWidgetItem(FCNodeMetaData node, QListWidget *listview = nullptr);
     QString getNodePhototype() const;
 };
 

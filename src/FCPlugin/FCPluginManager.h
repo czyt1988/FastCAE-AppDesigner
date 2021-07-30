@@ -26,4 +26,6 @@ public:
     int getPluginCount() const;
 };
 
+
+
 #endif // FCPLUGINMANAGER_H

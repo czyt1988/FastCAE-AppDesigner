@@ -3,63 +3,11 @@
 #include <QMatrix>
 #include <QKeyEvent>
 #include <QDebug>
-//Local
-#include "FCNode.h"
-#include "FCNodeLink.h"
-#include "FCGraphicsNodeItem.h"
-#include "FCGraphicsNodeLinkLineItem.h"
 
 
 FCGraphicsScene::FCGraphicsScene(QObject *parent) : QGraphicsScene(parent)
     , m_scaleFactor(1.0)
 {
-}
-
-
-void FCGraphicsScene::addNodeItem(FCNode *node)
-{
-    FCGraphicsNodeItem *nodeItem = new FCGraphicsNodeItem(node);
-
-    m_node2item[node] = nodeItem;
-    addItem(nodeItem);
-}
-
-
-void FCGraphicsScene::addNodeLinkItem(FCNodeLink *link)
-{
-    FCGraphicsNodeLinkLineItem *linkItem = new FCGraphicsNodeLinkLineItem(link);
-
-    m_link2item[link] = linkItem;
-    addItem(linkItem);
-    linkItem->updateNodePos();
-}
-
-
-FCGraphicsNodeItem *FCGraphicsScene::nodeToItem(FCNode *node)
-{
-    return (m_node2item.value(node, nullptr));
-}
-
-
-FCGraphicsNodeLinkLineItem *FCGraphicsScene::linkToItem(FCNodeLink *link)
-{
-    return (m_link2item.value(link, nullptr));
-}
-
-
-void FCGraphicsScene::callNodeDoubleClicked(FCGraphicsNodeItem *item)
-{
-    emit nodeDoubleClicked(item);
-}
-
-
-/**
- * @brief 节点移动结束
- * @param node
- */
-void FCGraphicsScene::callNodePositionChanged(FCGraphicsNodeItem *item)
-{
-    emit nodePositionChanged(item);
 }
 
 
@@ -119,7 +67,7 @@ void FCGraphicsScene::setUndoStack(QUndoStack *undoStack)
 }
 
 
-void FCGraphicsScene::callNodeRotationChanged(FCGraphicsNodeItem *item)
-{
-    emit nodeRotationChanged(item);
-}
+//void FCGraphicsScene::callNodeRotationChanged(FCGraphicsNodeItem *item)
+//{
+//    emit nodeRotationChanged(item);
+//}

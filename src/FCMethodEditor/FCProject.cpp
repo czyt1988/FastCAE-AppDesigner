@@ -1,5 +1,4 @@
 ﻿#include "FCProject.h"
-#include "FCNodesManager.h"
 #include <QScopedPointer>
 class FCProjectPrivate {
 public:
@@ -7,11 +6,9 @@ public:
     FCProjectPrivate(FCProject *p);
 public:
     QString _projectName;
-    QScopedPointer<FCNodesManager> _nodeManager;
 };
 
 FCProjectPrivate::FCProjectPrivate(FCProject *p) : q_ptr(p)
-    , _nodeManager(new FCNodesManager)
 {
 }
 
@@ -47,14 +44,4 @@ QString FCProject::getProjectName() const
 void FCProject::setProjectName(const QString& projectName)
 {
     d_ptr->_projectName = projectName;
-}
-
-
-/**
- * @brief 获取节点管理类
- * @return
- */
-FCNodesManager *FCProject::manager() const
-{
-    return (d_ptr->_nodeManager.get());
 }

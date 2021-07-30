@@ -21,31 +21,29 @@ TARGET = MethodEditor
 $$commonProAppSet($${TARGET})
 
 SOURCES += \
-    FCGraphicsNodeLinkLineItem.cpp \
     FCGraphicsScene.cpp \
     FCGraphicsView.cpp \
     FCMethodEditorMainWindow.cpp \
     FCNodeGraphicsView.cpp \
     FCNodeListWidget.cpp \
-    FCNodeTemplate.cpp \
+    FCPluginManagerDialog.cpp \
     FCProject.cpp \
     FCToolBox.cpp \
     main.cpp
 
 HEADERS += \
-    FCGraphicsItemType.h \
-    FCGraphicsNodeLinkLineItem.h \
     FCGraphicsScene.h \
     FCGraphicsView.h \
     FCMethodEditorMainWindow.h \
     FCNodeGraphicsView.h \
     FCNodeListWidget.h \
-    FCNodeTemplate.h \
+    FCPluginManagerDialog.h \
     FCProject.h \
     FCToolBox.h
 
 FORMS += \
-    FCMethodEditorMainWindow.ui
+    FCMethodEditorMainWindow.ui \
+    FCPluginManagerDialog.ui
 
 include($$PWD/Mime/Mime.pri)
 
@@ -54,4 +52,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+include($${FC_SRC_DIR}/FCPlugin/FCPlugin.pri)
 include($${FC_SRC_DIR}/FCNode/FCNode.pri)

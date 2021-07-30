@@ -16,6 +16,7 @@ FC_3RD_PARTY_DIR = $${FC_SRC_DIR}/3rdparty # 第三方库路径
 BIN_APP_BUILD_DIR = $$BIN_DIR/build_apps # 生成的app路径
 BIN_LIB_BUILD_DIR = $$BIN_DIR/build_libs # 生成的lib路径
 BIN_PLUGIN_BUILD_DIR = $$BIN_DIR/build_plugins # 生成的plugin路径
+BIN_PLUGIN_DIR = $$BIN_DIR/plugins #插件的路径
 
 VTK_LIB_BASE_DIR = $${FC_3RD_PARTY_DIR}/VTK # 第三方库的VTK路径
 OCC_LIB_BASE_DIR = $${FC_3RD_PARTY_DIR}/OCC # 第三方库的OCC路径

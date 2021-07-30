@@ -1,17 +1,17 @@
 ﻿#include "FCNodeListWidget.h"
 
-#define ROLE_PHOTOTYPE    (Qt::UserRole+1)
+#define ROLE_META_DATA    (Qt::UserRole+1)
 
-FCNodeListWidgetItem::FCNodeListWidgetItem(const FCNode *node, QListWidget *listview)
-    : QListWidgetItem(QIcon(node->getPixmap()), node->getDescribe(), listview)
+FCNodeListWidgetItem::FCNodeListWidgetItem(FCNodeMetaData node, QListWidget *listview)
+    : QListWidgetItem(QIcon(node.getIcon()), node.getNodeName(), listview)
 {
-    setData(ROLE_PHOTOTYPE, node->getNodePrototype());
+    setData(ROLE_META_DATA, QVariant::fromValue(node));
 }
 
 
 QString FCNodeListWidgetItem::getNodePhototype() const
 {
-    return (data(ROLE_PHOTOTYPE).toString());
+    return (data(ROLE_META_DATA).value<FCNodeMetaData>().getNodePrototype());
 }
 
 

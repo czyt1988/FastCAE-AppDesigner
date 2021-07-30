@@ -2,7 +2,6 @@
 #define FCPROJECT_H
 #include <QObject>
 #include "FCGlobals.h"
-class FCNodesManager;
 FC_IMPL_FORWARD_DECL(FCProject)
 
 /**
@@ -18,9 +17,6 @@ public:
     //获取项目名
     QString getProjectName() const;
     void setProjectName(const QString& projectName);
-
-    //获取节点管理类
-    FCNodesManager *manager() const;
 };
 
 #endif // FCPROJECT_H
