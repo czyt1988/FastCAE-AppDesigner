@@ -21,7 +21,6 @@ TARGET = MethodEditor
 $$commonProAppSet($${TARGET})
 
 SOURCES += \
-    FCGraphicsNodeItem.cpp \
     FCGraphicsNodeLinkLineItem.cpp \
     FCGraphicsScene.cpp \
     FCGraphicsView.cpp \
@@ -35,7 +34,6 @@ SOURCES += \
 
 HEADERS += \
     FCGraphicsItemType.h \
-    FCGraphicsNodeItem.h \
     FCGraphicsNodeLinkLineItem.h \
     FCGraphicsScene.h \
     FCGraphicsView.h \

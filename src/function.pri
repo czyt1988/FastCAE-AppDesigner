@@ -81,17 +81,22 @@ defineReplace(saCopyFullPathLibToBin) {
 # 把plugin lib拷贝到plugin目录下,arg1为plugin的名称
 defineReplace(saCopyPluginLibToPlugin) {
     LibName = $$1
+    PLUGIN_FOLDER = $${BIN_DIR}/plugins
+    PLUGIN_FOLDER = $$saFixPath($${PLUGIN_FOLDER})
     win32 {
         DIR1 = $${BIN_PLUGIN_BUILD_DIR}/$${LibName}.dll
-        DIR2 = $${BIN_DIR}/plugins/$${LibName}.dll
+        DIR2 = $${PLUGIN_FOLDER}/$${LibName}.dll
     }
     unix {
         DIR1 = $${BIN_PLUGIN_BUILD_DIR}/$${LibName}.so
-        DIR2 = $${BIN_DIR}/plugins/$${LibName}.so
+        DIR2 = $${PLUGIN_FOLDER}/$${LibName}.so
     }
     DIR_FROM = $$saFixPath($${DIR1})
     DIR_TO = $$saFixPath($${DIR2})
     CMD_CPY = $${QMAKE_COPY} $${DIR_FROM} $${DIR_TO}
+    CMD_MKDIR = mkdir -p $${PLUGIN_FOLDER}
+    message($$CMD_MKDIR)
+    QMAKE_POST_LINK += $${CMD_MKDIR}
     QMAKE_POST_LINK += $${CMD_CPY}
     export(QMAKE_POST_LINK)
     return (true)
