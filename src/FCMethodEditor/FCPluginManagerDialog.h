@@ -18,7 +18,8 @@ public:
 
 protected:
     void changeEvent(QEvent *e);
-
+private:
+    void init();
 private:
     Ui::FCPluginManagerDialog *ui;
 };

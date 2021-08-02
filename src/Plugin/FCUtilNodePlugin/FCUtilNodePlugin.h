@@ -4,14 +4,18 @@
 #include "FCAbstractPlugin.h"
 #include "FCUtilNodePluginGlobal.h"
 #include "FCAbstractNodePlugin.h"
+//这是插件要求的6个标准导出函数
+extern "C" FCUTILNODEPLUGIN_API QString plugin_get_iid();
 
-FCUTILNODEPLUGIN_API QString plugin_get_iid();
-FCUTILNODEPLUGIN_API QString plugin_get_name();
-FCUTILNODEPLUGIN_API QString plugin_get_version();
-FCUTILNODEPLUGIN_API QString plugin_get_description();
-FCUTILNODEPLUGIN_API FCAbstractPlugin *plugin_create();
-FCUTILNODEPLUGIN_API void plugin_destory(FCAbstractPlugin *p);
+extern "C" FCUTILNODEPLUGIN_API QString plugin_get_name();
 
+extern "C" FCUTILNODEPLUGIN_API QString plugin_get_version();
+
+extern "C" FCUTILNODEPLUGIN_API QString plugin_get_description();
+
+extern "C" FCUTILNODEPLUGIN_API FCAbstractPlugin *plugin_create();
+
+extern "C" FCUTILNODEPLUGIN_API void plugin_destory(FCAbstractPlugin *p);
 
 class FCUtilNodePlugin : public FCAbstractNodePlugin
 {

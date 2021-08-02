@@ -41,7 +41,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menufile">
@@ -59,8 +59,15 @@
     <addaction name="actionRedo"/>
     <addaction name="actionUndo"/>
    </widget>
+   <widget class="QMenu" name="menuabout">
+    <property name="title">
+     <string>about</string>
+    </property>
+    <addaction name="actionPluginManager"/>
+   </widget>
    <addaction name="menufile"/>
    <addaction name="menuedit"/>
+   <addaction name="menuabout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockWidgetTemplate">
@@ -100,6 +107,11 @@
   <action name="actionUndo">
    <property name="text">
     <string>undo</string>
+   </property>
+  </action>
+  <action name="actionPluginManager">
+   <property name="text">
+    <string>plugin</string>
    </property>
   </action>
  </widget>

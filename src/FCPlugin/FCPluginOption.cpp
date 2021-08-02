@@ -1,8 +1,7 @@
 ﻿#include "FCPluginOption.h"
 #include <QObject>
 #include <QLibrary>
-#include <QSharedPointer>
-#include <QDebug>
+#include <memory>
 class FCPluginOptionPrivate {
     FC_IMPL_PUBLIC(FCPluginOption)
 public:
@@ -14,7 +13,7 @@ public:
     FP_PluginCreate _fpCreate = { nullptr };
     FP_PluginDestory _fpDestory = { nullptr };
     FCAbstractPlugin *_plugin = { nullptr };
-    QSharedPointer<QLibrary> _lib;
+    std::shared_ptr<QLibrary> _lib;
 };
 
 FCPluginOptionPrivate::FCPluginOptionPrivate(FCPluginOption *p) : q_ptr(p)
@@ -28,8 +27,15 @@ FCPluginOption::FCPluginOption() : d_ptr(new FCPluginOptionPrivate(this))
 }
 
 
+/**
+ * @brief 复制构造函数
+ *
+ * 这时候会共享QLibrary的内存
+ * @param other
+ */
 FCPluginOption::FCPluginOption(const FCPluginOption& other)
 {
+    d_ptr.reset(new FCPluginOptionPrivate(this));
     (*d_ptr) = *(other.d_ptr);
 }
 
@@ -42,6 +48,9 @@ FCPluginOption::FCPluginOption(FCPluginOption&& other)
 
 FCPluginOption& FCPluginOption::operator =(const FCPluginOption& other)
 {
+    if (d_ptr.isNull()) {
+        d_ptr.reset(new FCPluginOptionPrivate(this));
+    }
     (*d_ptr) = *(other.d_ptr);
     return (*this);
 }
@@ -49,6 +58,30 @@ FCPluginOption& FCPluginOption::operator =(const FCPluginOption& other)
 
 FCPluginOption::~FCPluginOption()
 {
+    if (d_ptr->_lib && (d_ptr->_lib.use_count() == 1)) {
+        //最后一个引用计数，要销毁
+        if (d_ptr->_fpDestory) {
+            d_ptr->_fpDestory(d_ptr->_plugin);
+        }
+    }
+}
+
+
+/**
+ * @brief 判断是否是有效的
+ * @return
+ */
+bool FCPluginOption::isValid() const
+{
+    if ((d_ptr->_fpGetIID == nullptr) ||
+        (d_ptr->_fpGetName == nullptr) ||
+        (d_ptr->_fpGetVersion == nullptr) ||
+        (d_ptr->_fpGetDescription == nullptr) ||
+        (d_ptr->_fpCreate == nullptr) ||
+        (d_ptr->_fpDestory == nullptr)) {
+        return (false);
+    }
+    return (true);
 }
 
 
@@ -61,7 +94,7 @@ bool FCPluginOption::load(const QString& pluginPath)
     bool isLoaded = d_ptr->_lib->load();
 
     if (!isLoaded) {
-        qWarning() << QObject::tr("Failed to load %1 (Reason: %2)").arg(fileName(), errorString());
+        qWarning() << QObject::tr("Failed to load %1 (Reason: %2)").arg(getFileName(), getErrorString());
         return (false);
     }
     FP_PluginGetIID getIID = (FP_PluginGetIID)(d_ptr->_lib->resolve("plugin_get_iid"));
@@ -70,14 +103,33 @@ bool FCPluginOption::load(const QString& pluginPath)
     FP_PluginGetDescription getDescription = (FP_PluginGetDescription)(d_ptr->_lib->resolve("plugin_get_description"));
     FP_PluginCreate createplugin = (FP_PluginCreate)(d_ptr->_lib->resolve("plugin_create"));
     FP_PluginDestory destoryplugin = (FP_PluginDestory)(d_ptr->_lib->resolve("plugin_destory"));
+    bool isok = true;
 
-    if ((getIID == nullptr) ||
-        (getName == nullptr) ||
-        (getVersion == nullptr) ||
-        (getDescription == nullptr) ||
-        (createplugin == nullptr) ||
-        (destoryplugin == nullptr)) {
-        qWarning() << QObject::tr("%1 is load,but can not resolve some necessary function").arg(fileName());
+    if (getIID == nullptr) {
+        isok = false;
+        qDebug() << QObject::tr("cannot resolve plugin_get_iid");
+    }
+    if (getName == nullptr) {
+        isok = false;
+        qDebug() << QObject::tr("cannot resolve plugin_get_name");
+    }
+    if (getVersion == nullptr) {
+        isok = false;
+        qDebug() << QObject::tr("cannot resolve plugin_get_version");
+    }
+    if (getDescription == nullptr) {
+        isok = false;
+        qDebug() << QObject::tr("cannot resolve plugin_get_description");
+    }
+    if (createplugin == nullptr) {
+        isok = false;
+        qDebug() << QObject::tr("cannot resolve plugin_create");
+    }
+    if (destoryplugin == nullptr) {
+        isok = false;
+        qDebug() << QObject::tr("cannot resolve plugin_destory");
+    }
+    if (!isok) {
         return (false);
     }
     d_ptr->_fpGetIID = getIID;
@@ -88,6 +140,7 @@ bool FCPluginOption::load(const QString& pluginPath)
     d_ptr->_fpDestory = destoryplugin;
     //最后创建一个插件
     d_ptr->_plugin = createplugin();
+
     return (true);
 }
 
@@ -96,13 +149,13 @@ bool FCPluginOption::load(const QString& pluginPath)
  * @brief 错误信息
  * @return
  */
-QString FCPluginOption::errorString() const
+QString FCPluginOption::getErrorString() const
 {
     return (d_ptr->_lib->errorString());
 }
 
 
-QString FCPluginOption::fileName() const
+QString FCPluginOption::getFileName() const
 {
     return (d_ptr->_lib->fileName());
 }
@@ -112,7 +165,7 @@ QString FCPluginOption::fileName() const
  * @brief 获取iid
  * @return
  */
-QString FCPluginOption::iid() const
+QString FCPluginOption::getIid() const
 {
     if (d_ptr->_plugin) {
         return (d_ptr->_plugin->getIID());
@@ -128,4 +181,22 @@ QString FCPluginOption::iid() const
 FCAbstractPlugin *FCPluginOption::plugin() const
 {
     return (d_ptr->_plugin);
+}
+
+
+/**
+ * @brief operator <<
+ * @param debug
+ * @param po
+ * @return
+ */
+QDebug operator <<(QDebug debug, const FCPluginOption& po)
+{
+    QDebugStateSaver saver(debug);
+
+    debug.nospace() << QObject::tr("plugin file name:") << po.getFileName()
+            << QObject::tr(",plugin iid:") << po.getIid()
+            << QObject::tr(",error string:") <<po.getErrorString()
+            << endl;
+    return (debug);
 }

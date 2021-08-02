@@ -92,9 +92,7 @@ defineReplace(saCopyPluginLibToPlugin) {
     }
     DIR_FROM = $$saFixPath($${DIR1})
     DIR_TO = $$saFixPath($${DIR2})
-    CMD_MKDIR = mkdir $${PLUGIN_FOLDER}
     CMD_CPY = $${QMAKE_COPY} $${DIR_FROM} $${DIR_TO}
-    QMAKE_POST_LINK += $${CMD_MKDIR}
     QMAKE_POST_LINK += $${CMD_CPY}
     export(QMAKE_POST_LINK)
     return (true)

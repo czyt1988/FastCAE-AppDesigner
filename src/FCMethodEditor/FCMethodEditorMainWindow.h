@@ -21,7 +21,11 @@ public:
 private:
     //根据模板生成nodewidget
     void setupNodeListWidget();
-
+    //初始化信号槽
+    void initConnect();
+private slots:
+    //插件管理对话框触发
+    void onActionPluginManagerTriggered(bool on);
 private:
     Ui::FCMethodEditorMainWindow *ui;
 };

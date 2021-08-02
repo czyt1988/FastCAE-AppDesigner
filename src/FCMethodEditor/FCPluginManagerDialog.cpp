@@ -1,11 +1,13 @@
-#include "FCPluginManagerDialog.h"
+﻿#include "FCPluginManagerDialog.h"
 #include "ui_FCPluginManagerDialog.h"
-
+#include "FCPluginManager.h"
+#include <QDebug>
 FCPluginManagerDialog::FCPluginManagerDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FCPluginManagerDialog)
 {
     ui->setupUi(this);
+    init();
 }
 
 FCPluginManagerDialog::~FCPluginManagerDialog()
@@ -23,4 +25,10 @@ void FCPluginManagerDialog::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+void FCPluginManagerDialog::init()
+{
+    FCPluginManager& plugin = FCPluginManager::instance();
+    qDebug() << plugin;
 }

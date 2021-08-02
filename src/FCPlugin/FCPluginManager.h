@@ -3,6 +3,8 @@
 #include <QObject>
 #include "FCPluginGlobal.h"
 #include "FCAbstractPlugin.h"
+#include "FCPluginOption.h"
+#include <QDebug>
 FC_IMPL_FORWARD_DECL(FCPluginManager)
 
 /**
@@ -19,13 +21,23 @@ public:
     //加载所有插件
     void load();
 
+    //是否已经加载
+    bool isLoaded() const;
+
     //设置插件路径
     void setPluginPath(const QString& path);
 
     //插件数
     int getPluginCount() const;
+
+    //获取加载的插件名
+    QList<QString> getPluginNames() const;
+
+    //获取插件的设置
+    FCPluginOption getPluginOption(const QString& name) const;
 };
 
-
+//格式化输出
+FCPLUGIN_API QDebug operator <<(QDebug debug, const FCPluginManager& fmg);
 
 #endif // FCPLUGINMANAGER_H
