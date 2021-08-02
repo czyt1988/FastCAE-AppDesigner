@@ -10,7 +10,7 @@ class FCUTILNODEPLUGIN_API FCConstValueNodeGraphicsItem : public FCAbstractNodeG
 {
 public:
     enum { Type = FastCAE::GraphicsNodeItemConst };
-    int type() const
+    int type() const override
     {
         return (Type);
     }

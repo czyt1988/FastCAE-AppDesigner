@@ -2,6 +2,7 @@
 #include "ui_FCPluginManagerDialog.h"
 #include "FCPluginManager.h"
 #include <QDebug>
+#include "FCAbstractNodePlugin.h"
 FCPluginManagerDialog::FCPluginManagerDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FCPluginManagerDialog)
@@ -29,6 +30,8 @@ void FCPluginManagerDialog::changeEvent(QEvent *e)
 
 void FCPluginManagerDialog::init()
 {
+    ui->treeWidget->setColumnCount(3);//插件名称，插件b版本，是否加载
     FCPluginManager& plugin = FCPluginManager::instance();
-    qDebug() << plugin;
+    plugin.
+
 }

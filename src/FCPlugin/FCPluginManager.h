@@ -18,6 +18,9 @@ public:
     //调用实例函数
     static FCPluginManager& instance();
 
+    //设置忽略列表
+    void setIgnoreList(const QStringList ignorePluginsName);
+
     //加载所有插件
     void load();
 
@@ -33,8 +36,8 @@ public:
     //获取加载的插件名
     QList<QString> getPluginNames() const;
 
-    //获取插件的设置
-    FCPluginOption getPluginOption(const QString& name) const;
+    //获取所有插件信息
+    QList<FCPluginOption> getPluginOptions() const;
 };
 
 //格式化输出

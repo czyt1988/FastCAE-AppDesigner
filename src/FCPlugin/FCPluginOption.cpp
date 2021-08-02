@@ -167,8 +167,8 @@ QString FCPluginOption::getFileName() const
  */
 QString FCPluginOption::getIid() const
 {
-    if (d_ptr->_plugin) {
-        return (d_ptr->_plugin->getIID());
+    if (d_ptr->_fpGetIID) {
+        return (d_ptr->_fpGetIID());
     }
     return (QString());
 }
@@ -185,6 +185,45 @@ FCAbstractPlugin *FCPluginOption::plugin() const
 
 
 /**
+ * @brief 获取插件的名称
+ * @return
+ */
+QString FCPluginOption::getPluginName() const
+{
+    if (d_ptr->_fpGetName) {
+        return (d_ptr->_fpGetName());
+    }
+    return (QString());
+}
+
+
+/**
+ * @brief 获取插件描述
+ * @return
+ */
+QString FCPluginOption::getPluginDescription() const
+{
+    if (d_ptr->_fpGetDescription) {
+        return (d_ptr->_fpGetDescription());
+    }
+    return (QString());
+}
+
+
+/**
+ * @brief 获取插件版本
+ * @return
+ */
+QString FCPluginOption::getPluginVersion() const
+{
+    if (d_ptr->_fpGetVersion) {
+        return (d_ptr->_fpGetVersion());
+    }
+    return (QString());
+}
+
+
+/**
  * @brief operator <<
  * @param debug
  * @param po
@@ -195,7 +234,10 @@ QDebug operator <<(QDebug debug, const FCPluginOption& po)
     QDebugStateSaver saver(debug);
 
     debug.nospace() << QObject::tr("plugin file name:") << po.getFileName()
-            << QObject::tr(",plugin iid:") << po.getIid()
+            << QObject::tr(",iid:") << po.getIid()
+            << QObject::tr(",name:") << po.getPluginName()
+            << QObject::tr(",description:") << po.getPluginDescription()
+            << QObject::tr(",version:") << po.getPluginVersion()
             << QObject::tr(",error string:") <<po.getErrorString()
             << endl;
     return (debug);

@@ -2,7 +2,7 @@
 #define FCPLUGINMANAGERDIALOG_H
 
 #include <QtWidgets/QDialog>
-
+#include <QStandardItemModel>
 
 namespace Ui {
 class FCPluginManagerDialog;

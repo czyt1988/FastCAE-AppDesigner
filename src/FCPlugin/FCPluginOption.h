@@ -36,6 +36,15 @@ public:
 
     //获取版本信息
     FCAbstractPlugin *plugin() const;
+
+    //获取插件名
+    QString getPluginName() const;
+
+    //获取插件描述
+    QString getPluginDescription() const;
+
+    //获取插件版本
+    QString getPluginVersion() const;
 };
 //格式化输出
 FCPLUGIN_API QDebug operator <<(QDebug debug, const FCPluginOption& po);
