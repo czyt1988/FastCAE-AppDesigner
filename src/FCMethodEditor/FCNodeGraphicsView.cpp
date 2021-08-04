@@ -10,6 +10,11 @@ FCNodeGraphicsView::FCNodeGraphicsView(QWidget *parent)
 {
     setAcceptDrops(true);
     setScene(new FCGraphicsScene(this));
+    setRenderHint(QPainter::Antialiasing, false);
+    //setDragMode(QGraphicsView::RubberBandDrag);
+    setOptimizationFlags(QGraphicsView::DontSavePainterState);
+    setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 }
 
 
@@ -68,8 +73,10 @@ void FCNodeGraphicsView::dropEvent(QDropEvent *e)
             qDebug()<<tr("can not create node,node prototype is:")<<nodemeta.getNodePrototype();
             return;
         }
+        QPoint pos = e->pos();
         qDebug() <<tr("add item");
         scene()->addItem(item);
+        item->moveBy(pos.x(), pos.y());
     }
 //    const FCNodeMimeData *mimeData = qobject_cast<const FCNodeMimeData *>(e->mimeData());
 //    FCGraphicsScene *s = qobject_cast<FCGraphicsScene *>(scene());

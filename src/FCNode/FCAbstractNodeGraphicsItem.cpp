@@ -17,6 +17,8 @@ FCAbstractNodeGraphicsItem::FCAbstractNodeGraphicsItem(QGraphicsItem *p) : QGrap
     , d_ptr(new FCAbstractNodeGraphicsItemPrivate(this))
 {
     d_ptr->_meta.setNodePrototype("FC.FCNodeGraphicsItem");
+    setFlags(ItemIsSelectable | ItemIsMovable);
+    setAcceptHoverEvents(true);
 }
 
 
