@@ -13,7 +13,10 @@ $$commonProLibSet($${TARGET})
 
 # 在lib文件夹下编译完后，把dll文件拷贝到bin目录下
 $$saCopyLibToBin($${TARGET})
+
+# 依赖
 include($${FC_SRC_DIR}/FCPlugin/FCPlugin.pri)
+
 HEADERS += \
     FCAbstractNodeGraphicsFactory.h \
     FCAbstractNodeGraphicsItem.h \
@@ -26,6 +29,7 @@ HEADERS += \
 SOURCES += \
     FCAbstractNodeGraphicsFactory.cpp \
     FCAbstractNodeGraphicsItem.cpp \
+    FCAbstractNodePlugin.cpp \
     FCNodeMetaData.cpp \
     FCProperties.cpp
 

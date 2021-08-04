@@ -29,6 +29,9 @@ public:
     //判断数据是否为空
     bool isNull() const;
 
+    //返回连接点信息
+    virtual QList<FCNodeLinkPoint> getLinkPoints() const;
+
 public:
     //绘图
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
@@ -45,6 +48,7 @@ protected:
 
 private:
     QVariant m_value;
+    QList<FCNodeLinkPoint> m_linkPoints;
 //    QColor m_hoverEdgeColor;        ///< 鼠标hover时的颜色
 //    QPen m_edge;                    ///< 边框画笔
 };

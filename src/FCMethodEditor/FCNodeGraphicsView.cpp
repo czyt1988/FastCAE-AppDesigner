@@ -67,35 +67,15 @@ void FCNodeGraphicsView::dropEvent(QDropEvent *e)
             qDebug()<<tr("drop have invalid mime data");
             return;
         }
+        QGraphicsScene *sc = scene();
         FCNodeMetaData nodemeta = nodemime->getNodeMetaData();
         FCAbstractNodeGraphicsItem *item = m_factory.create(nodemeta.getNodePrototype());
         if (nullptr == item) {
             qDebug()<<tr("can not create node,node prototype is:")<<nodemeta.getNodePrototype();
             return;
         }
-        QPoint pos = e->pos();
-        qDebug() <<tr("add item");
-        scene()->addItem(item);
-        item->moveBy(pos.x(), pos.y());
+        QPointF pos = mapToScene(e->pos());
+        item->setPos(pos);
+        sc->addItem(item);
     }
-//    const FCNodeMimeData *mimeData = qobject_cast<const FCNodeMimeData *>(e->mimeData());
-//    FCGraphicsScene *s = qobject_cast<FCGraphicsScene *>(scene());
-
-//    if ((nullptr == mimeData) || (nullptr == s)) {
-//        return;
-//    }
-
-//    if (m_template.isNull()) {
-//        return;
-//    }
-//    if (mimeData->hasFormat(MIME_STANDARD_NODE)) {
-//        QPointF scenePos = mapToScene(e->pos());
-//        QString nodePrototype = mimeData->getNodePrototype();
-//        FCNode *n = m_project->manager()->createNodeFromPrototype(nodePrototype);
-//        if (nullptr == n) {
-//            return;
-//        }
-//        n->setPos(scenePos);
-//        s->addNodeItem(n);
-//    }
 }

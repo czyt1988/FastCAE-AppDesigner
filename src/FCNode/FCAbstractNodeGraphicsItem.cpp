@@ -13,6 +13,22 @@ FCAbstractNodeGraphicsItemPrivate::FCAbstractNodeGraphicsItemPrivate(FCAbstractN
 }
 
 
+FCNodeLinkPoint::FCNodeLinkPoint()
+    : direction(East)
+    , way(OutPut)
+{
+}
+
+
+FCNodeLinkPoint::FCNodeLinkPoint(const QPoint& p, const QString& n, FCNodeLinkPoint::Way w, FCNodeLinkPoint::Direction d)
+    : position(p)
+    , name(n)
+    , way(w)
+    , direction(d)
+{
+}
+
+
 FCAbstractNodeGraphicsItem::FCAbstractNodeGraphicsItem(QGraphicsItem *p) : QGraphicsItem(p)
     , d_ptr(new FCAbstractNodeGraphicsItemPrivate(this))
 {
