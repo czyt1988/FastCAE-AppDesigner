@@ -1,11 +1,12 @@
 ﻿#include "FCConstValueNodeGraphicsItem.h"
 #include <QPainter>
-
+#define RES_VARIANT ":/icon/icon/variant.svg"
 FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem(QGraphicsItem *p)
     : FCAbstractNodeGraphicsItem(p)
 {
+    metaData().setIcon(QIcon(RES_VARIANT));
     metaData().setNodePrototype("FC.Util.Const");
-    metaData().setNodeName(QObject::tr("const"));
+    metaData().setNodeName(QObject::tr("variant"));
     metaData().setGroup(QObject::tr("common"));
 }
 

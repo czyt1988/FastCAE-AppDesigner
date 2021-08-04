@@ -1,29 +1,30 @@
 ﻿#include "FCNodeMimeData.h"
 #include "FCMimeTypeFormatDefine.h"
-FCNodeMimeData::FCNodeMimeData() : FCMimeData()
+FCNodeMimeData::FCNodeMimeData(const FCNodeMetaData& md) : FCMimeData()
 {
+    setNodeMetaData(md);
 }
 
 
 QStringList FCNodeMimeData::formats() const
 {
-    return (QStringList() << MIME_STANDARD_NODE);
+    return (QStringList() << MIME_NODE_META_DATA);
 }
 
 
 bool FCNodeMimeData::hasFormat(const QString& mimeType) const
 {
-    return (mimeType == MIME_STANDARD_NODE);
+    return (mimeType == MIME_NODE_META_DATA);
 }
 
 
-QString FCNodeMimeData::getNodePrototype() const
+FCNodeMetaData FCNodeMimeData::getNodeMetaData() const
 {
-    return (m_nodePrototype);
+    return (m_nodeMetaData);
 }
 
 
-void FCNodeMimeData::setNodePrototype(const QString& name)
+void FCNodeMimeData::setNodeMetaData(const FCNodeMetaData& md)
 {
-    m_nodePrototype = name;
+    m_nodeMetaData = md;
 }

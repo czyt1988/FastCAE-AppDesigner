@@ -4,3 +4,4 @@ build*
 *.autosave
 *.dll
 *.lib
+*.user.*

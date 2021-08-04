@@ -29,6 +29,9 @@ SOURCES += \
     FCNodeGraphicsFactory.cpp \
     FCUtilNodePlugin.cpp
 
+RESOURCES += \
+    resource.qrc
+
 
 
 

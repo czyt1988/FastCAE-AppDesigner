@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "FCNodeListWidget.h"
-
+#include "FCMethodEditorNodeFactory.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class FCMethodEditorMainWindow;
@@ -21,12 +21,19 @@ public:
 private:
     //根据模板生成nodewidget
     void setupNodeListWidget();
+
+    //初始化ui
+    void initUI();
+
     //初始化信号槽
     void initConnect();
+
 private slots:
     //插件管理对话框触发
     void onActionPluginManagerTriggered(bool on);
+
 private:
     Ui::FCMethodEditorMainWindow *ui;
+    FCMethodEditorNodeFactory m_nodeFactory;
 };
 #endif // METHODMAINWINDOW_H

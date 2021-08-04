@@ -24,6 +24,8 @@ SOURCES += \
     FCGraphicsScene.cpp \
     FCGraphicsView.cpp \
     FCMethodEditorMainWindow.cpp \
+    FCMethodEditorNodeFactory.cpp \
+    FCMethodEditorPluginManager.cpp \
     FCNodeGraphicsView.cpp \
     FCNodeListWidget.cpp \
     FCPluginManagerDialog.cpp \
@@ -35,6 +37,8 @@ HEADERS += \
     FCGraphicsScene.h \
     FCGraphicsView.h \
     FCMethodEditorMainWindow.h \
+    FCMethodEditorNodeFactory.h \
+    FCMethodEditorPluginManager.h \
     FCNodeGraphicsView.h \
     FCNodeListWidget.h \
     FCPluginManagerDialog.h \

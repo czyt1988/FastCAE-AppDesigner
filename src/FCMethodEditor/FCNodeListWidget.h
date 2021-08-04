@@ -5,8 +5,9 @@
 #include "FCNodeMetaData.h"
 class FCNodeListWidgetItem : public QListWidgetItem {
 public:
-    FCNodeListWidgetItem(FCNodeMetaData node, QListWidget *listview = nullptr);
-    QString getNodePhototype() const;
+    FCNodeListWidgetItem(const FCNodeMetaData& node, QListWidget *listview = nullptr);
+    FCNodeMetaData getNodeMetaData() const;
+    void setNodeMetaData(const FCNodeMetaData& md);
 };
 
 /**
@@ -17,6 +18,10 @@ class FCNodeListWidget : public QListWidget
     Q_OBJECT
 public:
     FCNodeListWidget(QWidget *p = nullptr);
+    void addItems(const QList<FCNodeMetaData>& nodeMetaDatas);
+
+protected:
+    virtual void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // FCNODELISTWIDGET_H

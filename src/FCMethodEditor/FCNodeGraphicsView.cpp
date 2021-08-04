@@ -2,12 +2,14 @@
 #include <QDragEnterEvent>
 #include <QDebug>
 #include "FCNodeMimeData.h"
+#include "FCNodeMetaData.h"
 #include "FCMimeTypeFormatDefine.h"
 #include "FCGraphicsScene.h"
 FCNodeGraphicsView::FCNodeGraphicsView(QWidget *parent)
     : FCGraphicsView(parent)
 {
     setAcceptDrops(true);
+    setScene(new FCGraphicsScene(this));
 }
 
 
@@ -28,9 +30,20 @@ void FCNodeGraphicsView::setProject(FCProject *project)
 }
 
 
+void FCNodeGraphicsView::setNodeFactory(FCMethodEditorNodeFactory factory)
+{
+    m_factory = factory;
+}
+
+
 void FCNodeGraphicsView::dragEnterEvent(QDragEnterEvent *e)
 {
-    e->acceptProposedAction();
+    if (e->mimeData()->hasFormat(MIME_NODE_META_DATA)) {
+        //说明有节点的meta数据拖入
+        e->acceptProposedAction();
+    }else{
+        e->ignore();
+    }
 }
 
 
@@ -42,6 +55,22 @@ void FCNodeGraphicsView::dragMoveEvent(QDragMoveEvent *e)
 
 void FCNodeGraphicsView::dropEvent(QDropEvent *e)
 {
+    if (e->mimeData()->hasFormat(MIME_NODE_META_DATA)) {
+        //说明有节点的meta数据拖入
+        const FCNodeMimeData *nodemime = qobject_cast<const FCNodeMimeData *>(e->mimeData());
+        if (nullptr == nodemime) {
+            qDebug()<<tr("drop have invalid mime data");
+            return;
+        }
+        FCNodeMetaData nodemeta = nodemime->getNodeMetaData();
+        FCAbstractNodeGraphicsItem *item = m_factory.create(nodemeta.getNodePrototype());
+        if (nullptr == item) {
+            qDebug()<<tr("can not create node,node prototype is:")<<nodemeta.getNodePrototype();
+            return;
+        }
+        qDebug() <<tr("add item");
+        scene()->addItem(item);
+    }
 //    const FCNodeMimeData *mimeData = qobject_cast<const FCNodeMimeData *>(e->mimeData());
 //    FCGraphicsScene *s = qobject_cast<FCGraphicsScene *>(scene());
 

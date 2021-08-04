@@ -53,6 +53,11 @@ void FCNodeGraphicsFactory::createMetaData()
 }
 
 
+/**
+ * @brief 这个主要是为了获取到FCAbstractNodeGraphicsItem对应的metadata，获取完metadata后把内存销毁
+ * @param t
+ * @return
+ */
 FCNodeMetaData FCNodeGraphicsFactory::saveGetMetaType(FCAbstractNodeGraphicsItem *t)
 {
     FCNodeMetaData meta = t->metaData();

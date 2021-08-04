@@ -29,7 +29,6 @@ public:
     //判断数据是否为空
     bool isNull() const;
 
-
 public:
     //绘图
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

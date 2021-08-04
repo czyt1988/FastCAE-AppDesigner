@@ -1,6 +1,6 @@
 ﻿#ifndef FCMIMETYPEFORMATDEFINE_H
 #define FCMIMETYPEFORMATDEFINE_H
 
-#define MIME_STANDARD_NODE    "FastCAE.StandardNode"
+#define MIME_NODE_META_DATA    "FastCAE.NodeMetaData"
 
 #endif // GMIMETYPEFORMATDEFINE_H

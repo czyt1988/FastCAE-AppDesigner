@@ -3,7 +3,10 @@
 #include <QtCore/qglobal.h>
 #include "FCGraphicsView.h"
 #include "FCProject.h"
+#include "FCMethodEditorNodeFactory.h"
+#include "FCGraphicsScene.h"
 #include <QPointer>
+
 class GProject;
 
 /**
@@ -15,6 +18,7 @@ public:
     FCNodeGraphicsView(QWidget *parent = 0);
     FCNodeGraphicsView(QGraphicsScene *scene, QWidget *parent = 0);
     void setProject(FCProject *project);
+    void setNodeFactory(FCMethodEditorNodeFactory factory);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *e) Q_DECL_OVERRIDE;
@@ -23,6 +27,7 @@ protected:
 
 private:
     QPointer<FCProject> m_project;
+    FCMethodEditorNodeFactory m_factory;
 };
 
 #endif // GNODEGRAPHICSVIEW_H
