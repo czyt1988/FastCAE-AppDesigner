@@ -81,7 +81,13 @@ public:
     virtual QList<FCNodeLinkPoint> getLinkPoints() const = 0;
 
     //绘制连接点
-    virtual void paintLinkPoint();
+    virtual void paintLinkPoints(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+    //绘制某个连接点
+    virtual void paintLinkPoint(const FCNodeLinkPoint& pl, QPainter *painter);
+
+    //获取连接点对应的矩形区域
+    virtual QRect getlinkPointRect(const FCNodeLinkPoint& pl) const;
 };
 
 #endif // FCNODEGRAPHICSITEM_H

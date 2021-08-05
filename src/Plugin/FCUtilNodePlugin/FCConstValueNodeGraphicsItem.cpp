@@ -1,6 +1,6 @@
 ﻿#include "FCConstValueNodeGraphicsItem.h"
 #include <QPainter>
-#define RES_VARIANT ":/icon/icon/variant.svg"
+#define RES_VARIANT    ":/icon/icon/variant.svg"
 FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem(QGraphicsItem *p)
     : FCAbstractNodeGraphicsItem(p)
 {
@@ -8,7 +8,11 @@ FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem(QGraphicsItem *p)
     metaData().setNodePrototype("FC.Util.Const");
     metaData().setNodeName(QObject::tr("variant"));
     metaData().setGroup(QObject::tr("common"));
-    m_linkPoints.append(FCNodeLinkPoint(QPoint(50,25),"out",FCNodeLinkPoint::OutPut,FCNodeLinkPoint::East));
+
+    m_linkPoints.append(FCNodeLinkPoint(QPoint(50-4, 25), "out", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::East));
+    m_linkPoints.append(FCNodeLinkPoint(QPoint(25, 50-4), "out1", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::South));
+    m_linkPoints.append(FCNodeLinkPoint(QPoint(0+4, 25), "out2", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::West));
+    m_linkPoints.append(FCNodeLinkPoint(QPoint(25, 0+4), "out3", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::North));
 }
 
 
@@ -69,9 +73,10 @@ bool FCConstValueNodeGraphicsItem::isNull() const
     return (b);
 }
 
+
 QList<FCNodeLinkPoint> FCConstValueNodeGraphicsItem::getLinkPoints() const
 {
-    return m_linkPoints;
+    return (m_linkPoints);
 }
 
 
@@ -84,7 +89,8 @@ void FCConstValueNodeGraphicsItem::paint(QPainter *painter, const QStyleOptionGr
     painter->setPen(pen);
     painter->fillRect(boundingRect(), Qt::white);
     painter->drawRect(boundingRect());
-
+    //绘制点
+    paintLinkPoints(painter, option, widget);
     painter->restore();
 }
 

@@ -1,4 +1,6 @@
 ﻿#include "FCAbstractNodeGraphicsItem.h"
+#include <QPainter>
+#include <QDebug>
 
 class FCAbstractNodeGraphicsItemPrivate {
     FC_IMPL_PUBLIC(FCAbstractNodeGraphicsItem)
@@ -108,4 +110,67 @@ FCNodeMetaData& FCAbstractNodeGraphicsItem::metaData()
 void FCAbstractNodeGraphicsItem::setMetaData(const FCNodeMetaData& metadata)
 {
     d_ptr->_meta = metadata;
+}
+
+
+/**
+ * @brief 绘制默认连接点
+ *
+ * 每个连接点的绘制调用@sa paintLinkPoint 函数,因此实例化重载应该重载@sa paintLinkPoint 函数
+ */
+void FCAbstractNodeGraphicsItem::paintLinkPoints(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QList<FCNodeLinkPoint> lps = getLinkPoints();
+
+    for (const FCNodeLinkPoint& lp : lps)
+    {
+        paintLinkPoint(lp, painter);
+    }
+}
+
+
+/**
+ * @brief 绘制某个连接点
+ * @param pl
+ * @param painter
+ */
+void FCAbstractNodeGraphicsItem::paintLinkPoint(const FCNodeLinkPoint& pl, QPainter *painter)
+{
+    painter->save();
+    //连接点是一个长方形，6X8,点中心是长方形中心
+    //先把painter坐标变换到点处
+    QColor clr(80, 103, 247);
+    QRect pointrange = getlinkPointRect(pl);// 横版矩形，对应East，West
+
+    qDebug() << pointrange;
+    painter->setPen(clr);
+    painter->drawRect(pointrange);
+    if (FCNodeLinkPoint::OutPut == pl.way) {
+        painter->fillRect(pointrange, clr);
+    }
+    painter->restore();
+}
+
+
+/**
+ * @brief 获取连接点对应的矩形区域
+ * @param pl
+ * @return
+ */
+QRect FCAbstractNodeGraphicsItem::getlinkPointRect(const FCNodeLinkPoint& pl) const
+{
+    switch (pl.direction)
+    {
+    case FCNodeLinkPoint::East:
+    case FCNodeLinkPoint::West:
+        return (QRect(pl.position.x()-4, pl.position.y()-3, 8, 6));
+
+    case FCNodeLinkPoint::North:
+    case FCNodeLinkPoint::South:
+        return (QRect(pl.position.x()-3, pl.position.y()-4, 6, 8));
+
+    default:
+        break;
+    }
+    return (QRect(pl.position.x()-3, pl.position.y()-3, 6, 6));
 }
