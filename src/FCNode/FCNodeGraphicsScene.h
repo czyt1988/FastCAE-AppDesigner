@@ -4,6 +4,7 @@
 #include "FCNodeGlobal.h"
 #include <QGraphicsScene>
 #include "FCAbstractNodeGraphicsItem.h"
+class QGraphicsSceneMouseEvent;
 
 class FCNODE_API FCNodeGraphicsScene : public QGraphicsScene
 {
@@ -20,11 +21,11 @@ signals:
      * @param item 节点item
      * @param lp 连接点
      */
-    void nodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp);
+    void nodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp, QGraphicsSceneMouseEvent *event);
 
 protected:
     //此函数将会触发 nodeItemLinkPointSelected 信号
-    void callNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp);
+    void callNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp, QGraphicsSceneMouseEvent *event);
 };
 
 #endif // FCNODEGRAPHICSSCENE_H

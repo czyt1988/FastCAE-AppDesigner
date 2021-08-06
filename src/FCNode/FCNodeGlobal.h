@@ -17,7 +17,7 @@ namespace FastCAE {
  */
 enum FCNodeGraphicsItemType {
     GraphicsNodeItem	= QGraphicsItem::UserType + 10          ///<针对FCNode的item
-    , GraphicsNodeItemConst                                         ///< 对应FCConstValueNodeGraphicsItem
+    , GraphicsLinkItem	= QGraphicsItem::UserType + 11
     , GraphicsNodeUserType	= QGraphicsItem::UserType + 1000        ///< 用户自定义的类型需要在此基础上加
 };
 }

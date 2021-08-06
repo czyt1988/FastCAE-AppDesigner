@@ -1,5 +1,6 @@
 ﻿#include "FCConstValueNodeGraphicsItem.h"
 #include <QPainter>
+#include "FCNodePalette.h"
 #define RES_VARIANT    ":/icon/icon/variant.svg"
 FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem(QGraphicsItem *p)
     : FCAbstractNodeGraphicsItem(p)
@@ -11,8 +12,8 @@ FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem(QGraphicsItem *p)
 
     m_linkPoints.append(FCNodeLinkPoint(QPoint(50-4, 25), "out", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::East));
     m_linkPoints.append(FCNodeLinkPoint(QPoint(25, 50-4), "out1", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::South));
-    m_linkPoints.append(FCNodeLinkPoint(QPoint(0+4, 25), "out2", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::West));
-    m_linkPoints.append(FCNodeLinkPoint(QPoint(25, 0+4), "out3", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::North));
+    m_linkPoints.append(FCNodeLinkPoint(QPoint(0+4, 25), "out2", FCNodeLinkPoint::Input, FCNodeLinkPoint::West));
+    m_linkPoints.append(FCNodeLinkPoint(QPoint(25, 0+4), "out3", FCNodeLinkPoint::Input, FCNodeLinkPoint::North));
 }
 
 
@@ -83,12 +84,18 @@ QList<FCNodeLinkPoint> FCConstValueNodeGraphicsItem::getLinkPoints() const
 void FCConstValueNodeGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->save();
-    QPen pen(Qt::black);
+    QPen pen(FCNodePalette::getGlobalEdgeColor());
+    QRectF rec = boundingRect();
 
     pen.setWidth(1);
+    if (isSelected()) {
+        pen.setWidth(2);
+        pen.setColor(pen.color().darker());
+        rec.adjust(1, 1, -1, -1);
+    }
     painter->setPen(pen);
-    painter->fillRect(boundingRect(), Qt::white);
-    painter->drawRect(boundingRect());
+    painter->fillRect(rec, FCNodePalette::getGlobalBackgroundColor());
+    painter->drawRect(rec);
     //绘制点
     paintLinkPoints(painter, option, widget);
     painter->restore();

@@ -20,19 +20,25 @@ include($${FC_SRC_DIR}/FCPlugin/FCPlugin.pri)
 HEADERS += \
     FCAbstractNodeGraphicsFactory.h \
     FCAbstractNodeGraphicsItem.h \
+    FCAbstractNodeLinkGraphicsItem.h \
     FCAbstractNodePlugin.h \
     FCNodeGlobal.h \
     FCNodeGraphicsScene.h \
+    FCNodeLinkPoint.h \
     FCNodeMetaData.h \
+    FCNodePalette.h \
     FCProperties.h
 
 
 SOURCES += \
     FCAbstractNodeGraphicsFactory.cpp \
     FCAbstractNodeGraphicsItem.cpp \
+    FCAbstractNodeLinkGraphicsItem.cpp \
     FCAbstractNodePlugin.cpp \
     FCNodeGraphicsScene.cpp \
+    FCNodeLinkPoint.cpp \
     FCNodeMetaData.cpp \
+    FCNodePalette.cpp \
     FCProperties.cpp
 
 

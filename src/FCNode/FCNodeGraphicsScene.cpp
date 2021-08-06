@@ -21,7 +21,7 @@ FCNodeGraphicsScene::FCNodeGraphicsScene(qreal x, qreal y, qreal width, qreal he
 }
 
 
-void FCNodeGraphicsScene::callNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp)
+void FCNodeGraphicsScene::callNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp, QGraphicsSceneMouseEvent *event)
 {
-    emit nodeItemLinkPointSelected(item, lp);
+    emit nodeItemLinkPointSelected(item, lp, event);
 }
