@@ -5,23 +5,24 @@
 class FCAbstractNodeLinkGraphicsItemPrivate {
     FC_IMPL_PUBLIC(FCAbstractNodeLinkGraphicsItem)
 public:
-    FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeLinkGraphicsItem *p);
+    FCAbstractNodeLinkGraphicsItemPrivate(FCAbstractNodeLinkGraphicsItem *p);
     FCAbstractNodeGraphicsItem *_fromItem;
     FCAbstractNodeGraphicsItem *_toItem;
     FCNodeLinkPoint _fromPoint;
     FCNodeLinkPoint _toPoint;
 };
 
-FCAbstractNodeLinkGraphicsItemPrivate::FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeLinkGraphicsItem *p)
+FCAbstractNodeLinkGraphicsItemPrivate::FCAbstractNodeLinkGraphicsItemPrivate(FCAbstractNodeLinkGraphicsItem *p)
     : q_ptr(p)
-      , _fromItem(nullptr)
-      , _toItem(nullptr)
+    , _fromItem(nullptr)
+    , _toItem(nullptr)
 {
 }
 
+
 ////////////////////////////////////////////////////////////////////////
 
-FCAbstractNodeLinkGraphicsItem::FCAbstractNodeLinkGraphicsItem()
+FCAbstractNodeLinkGraphicsItem::FCAbstractNodeLinkGraphicsItem(QGraphicsItem *p)
     : QGraphicsItem(p)
     , d_ptr(new FCAbstractNodeLinkGraphicsItemPrivate(this))
 {
