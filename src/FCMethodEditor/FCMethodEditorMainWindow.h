@@ -1,5 +1,5 @@
-﻿#ifndef METHODMAINWINDOW_H
-#define METHODMAINWINDOW_H
+﻿#ifndef FCMETHODEDITORMAINWINDOW_H
+#define FCMETHODEDITORMAINWINDOW_H
 
 #include <QMainWindow>
 #include "FCNodeListWidget.h"

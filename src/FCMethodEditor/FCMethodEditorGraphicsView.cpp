@@ -1,15 +1,15 @@
-﻿#include "FCNodeGraphicsView.h"
+﻿#include "FCMethodEditorGraphicsView.h"
 #include <QDragEnterEvent>
 #include <QDebug>
 #include "FCNodeMimeData.h"
 #include "FCNodeMetaData.h"
 #include "FCMimeTypeFormatDefine.h"
-#include "FCGraphicsScene.h"
-FCNodeGraphicsView::FCNodeGraphicsView(QWidget *parent)
+#include "FCMethodEditorGraphicsScene.h"
+FCMethodEditorGraphicsView::FCMethodEditorGraphicsView(QWidget *parent)
     : FCGraphicsView(parent)
 {
     setAcceptDrops(true);
-    setScene(new FCGraphicsScene(this));
+    setScene(new FCMethodEditorGraphicsScene(this));
     setRenderHint(QPainter::Antialiasing, false);
     //setDragMode(QGraphicsView::RubberBandDrag);
     setOptimizationFlags(QGraphicsView::DontSavePainterState);
@@ -18,7 +18,7 @@ FCNodeGraphicsView::FCNodeGraphicsView(QWidget *parent)
 }
 
 
-FCNodeGraphicsView::FCNodeGraphicsView(QGraphicsScene *scene, QWidget *parent)
+FCMethodEditorGraphicsView::FCMethodEditorGraphicsView(QGraphicsScene *scene, QWidget *parent)
     : FCGraphicsView(scene, parent)
 {
     setAcceptDrops(true);
@@ -29,19 +29,19 @@ FCNodeGraphicsView::FCNodeGraphicsView(QGraphicsScene *scene, QWidget *parent)
  * @brief 设置工程
  * @param project
  */
-void FCNodeGraphicsView::setProject(FCProject *project)
+void FCMethodEditorGraphicsView::setProject(FCProject *project)
 {
     m_project = project;
 }
 
 
-void FCNodeGraphicsView::setNodeFactory(FCMethodEditorNodeFactory factory)
+void FCMethodEditorGraphicsView::setNodeFactory(FCMethodEditorNodeFactory factory)
 {
     m_factory = factory;
 }
 
 
-void FCNodeGraphicsView::dragEnterEvent(QDragEnterEvent *e)
+void FCMethodEditorGraphicsView::dragEnterEvent(QDragEnterEvent *e)
 {
     if (e->mimeData()->hasFormat(MIME_NODE_META_DATA)) {
         //说明有节点的meta数据拖入
@@ -52,13 +52,13 @@ void FCNodeGraphicsView::dragEnterEvent(QDragEnterEvent *e)
 }
 
 
-void FCNodeGraphicsView::dragMoveEvent(QDragMoveEvent *e)
+void FCMethodEditorGraphicsView::dragMoveEvent(QDragMoveEvent *e)
 {
     e->acceptProposedAction();
 }
 
 
-void FCNodeGraphicsView::dropEvent(QDropEvent *e)
+void FCMethodEditorGraphicsView::dropEvent(QDropEvent *e)
 {
     if (e->mimeData()->hasFormat(MIME_NODE_META_DATA)) {
         //说明有节点的meta数据拖入

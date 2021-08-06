@@ -40,6 +40,9 @@ public:
 };
 Q_DECLARE_METATYPE(FCNodeLinkPoint)
 
+//FCNodeLinkPoint 的等于号操作符
+FCNODE_API bool operator ==(const FCNodeLinkPoint& a, const FCNodeLinkPoint& b);
+
 /**
  * @brief 这是节点的基类，fastcae所有节点都继承此类
  * 作为一个节点的QGraphicsItem，
@@ -88,6 +91,14 @@ public:
 
     //获取连接点对应的矩形区域
     virtual QRect getlinkPointRect(const FCNodeLinkPoint& pl) const;
+
+    //设置连接点的颜色
+    void setLinkPointColor(const QColor& clr);
+    const QColor& getLinkPointColor() const;
+
+protected:
+    //鼠标事件
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
 };
 
 #endif // FCNODEGRAPHICSITEM_H

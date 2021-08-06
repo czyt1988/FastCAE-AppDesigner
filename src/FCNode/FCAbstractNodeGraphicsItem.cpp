@@ -1,19 +1,9 @@
 ﻿#include "FCAbstractNodeGraphicsItem.h"
 #include <QPainter>
 #include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 
-class FCAbstractNodeGraphicsItemPrivate {
-    FC_IMPL_PUBLIC(FCAbstractNodeGraphicsItem)
-public:
-    FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p);
-    FCNodeMetaData _meta;
-};
-
-FCAbstractNodeGraphicsItemPrivate::FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p)
-    : q_ptr(p)
-{
-}
-
+////////////////////////////////////////////////////////////////////////
 
 FCNodeLinkPoint::FCNodeLinkPoint()
     : direction(East)
@@ -30,6 +20,40 @@ FCNodeLinkPoint::FCNodeLinkPoint(const QPoint& p, const QString& n, FCNodeLinkPo
 {
 }
 
+
+/**
+ * @brief FCNodeLinkPoint 的等于号操作符
+ * @param a
+ * @param b
+ * @return
+ */
+bool operator ==(const FCNodeLinkPoint& a, const FCNodeLinkPoint& b)
+{
+    return ((a.name == b.name) &&
+           (a.direction == b.direction) &&
+           (a.position == b.position) &&
+           (a.way == b.way));
+}
+
+
+////////////////////////////////////////////////////////////////////////
+
+class FCAbstractNodeGraphicsItemPrivate {
+    FC_IMPL_PUBLIC(FCAbstractNodeGraphicsItem)
+public:
+    FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p);
+    FCNodeMetaData _meta;
+    QColor _linkPointColor;
+};
+
+FCAbstractNodeGraphicsItemPrivate::FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p)
+    : q_ptr(p)
+    , _linkPointColor(80, 103, 247)
+{
+}
+
+
+////////////////////////////////////////////////////////////////////////
 
 FCAbstractNodeGraphicsItem::FCAbstractNodeGraphicsItem(QGraphicsItem *p) : QGraphicsItem(p)
     , d_ptr(new FCAbstractNodeGraphicsItemPrivate(this))
@@ -139,7 +163,7 @@ void FCAbstractNodeGraphicsItem::paintLinkPoint(const FCNodeLinkPoint& pl, QPain
     painter->save();
     //连接点是一个长方形，6X8,点中心是长方形中心
     //先把painter坐标变换到点处
-    QColor clr(80, 103, 247);
+    QColor clr = getLinkPointColor();
     QRect pointrange = getlinkPointRect(pl);// 横版矩形，对应East，West
 
     qDebug() << pointrange;
@@ -173,4 +197,41 @@ QRect FCAbstractNodeGraphicsItem::getlinkPointRect(const FCNodeLinkPoint& pl) co
         break;
     }
     return (QRect(pl.position.x()-3, pl.position.y()-3, 6, 6));
+}
+
+
+/**
+ * @brief 设置连接点的颜色
+ * @param clr
+ */
+void FCAbstractNodeGraphicsItem::setLinkPointColor(const QColor& clr)
+{
+    d_ptr->_linkPointColor = clr;
+}
+
+
+/**
+ * @brief 返回连接点的颜色
+ * @return
+ */
+const QColor& FCAbstractNodeGraphicsItem::getLinkPointColor() const
+{
+    return (d_ptr->_linkPointColor);
+}
+
+
+/**
+ * @brief 鼠标按下
+ * @param event
+ */
+void FCAbstractNodeGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    QList<FCNodeLinkPoint> lps = getLinkPoints();
+
+    for (const FCNodeLinkPoint& lp : lps)
+    {
+        if (getlinkPointRect(lp).contains(event->pos().toPoint())) {
+            //说明这个link point点击了
+        }
+    }
 }

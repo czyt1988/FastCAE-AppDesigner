@@ -1,10 +1,10 @@
-﻿#ifndef FCNODEGRAPHICSVIEW_H
-#define FCNODEGRAPHICSVIEW_H
+﻿#ifndef FCMETHODEDITORGRAPHICSVIEW_H
+#define FCMETHODEDITORGRAPHICSVIEW_H
 #include <QtCore/qglobal.h>
 #include "FCGraphicsView.h"
 #include "FCProject.h"
 #include "FCMethodEditorNodeFactory.h"
-#include "FCGraphicsScene.h"
+#include "FCMethodEditorGraphicsScene.h"
 #include <QPointer>
 
 class GProject;
@@ -12,11 +12,11 @@ class GProject;
 /**
  * @brief 用于节点显示的GraphicsView
  */
-class FCNodeGraphicsView : public FCGraphicsView
+class FCMethodEditorGraphicsView : public FCGraphicsView
 {
 public:
-    FCNodeGraphicsView(QWidget *parent = 0);
-    FCNodeGraphicsView(QGraphicsScene *scene, QWidget *parent = 0);
+    FCMethodEditorGraphicsView(QWidget *parent = 0);
+    FCMethodEditorGraphicsView(QGraphicsScene *scene, QWidget *parent = 0);
     void setProject(FCProject *project);
     void setNodeFactory(FCMethodEditorNodeFactory factory);
 

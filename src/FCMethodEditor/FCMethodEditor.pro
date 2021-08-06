@@ -21,12 +21,12 @@ TARGET = MethodEditor
 $$commonProAppSet($${TARGET})
 
 SOURCES += \
-    FCGraphicsScene.cpp \
     FCGraphicsView.cpp \
+    FCMethodEditorGraphicsScene.cpp \
+    FCMethodEditorGraphicsView.cpp \
     FCMethodEditorMainWindow.cpp \
     FCMethodEditorNodeFactory.cpp \
     FCMethodEditorPluginManager.cpp \
-    FCNodeGraphicsView.cpp \
     FCNodeListWidget.cpp \
     FCPluginManagerDialog.cpp \
     FCProject.cpp \
@@ -34,12 +34,12 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
-    FCGraphicsScene.h \
     FCGraphicsView.h \
+    FCMethodEditorGraphicsScene.h \
+    FCMethodEditorGraphicsView.h \
     FCMethodEditorMainWindow.h \
     FCMethodEditorNodeFactory.h \
     FCMethodEditorPluginManager.h \
-    FCNodeGraphicsView.h \
     FCNodeListWidget.h \
     FCPluginManagerDialog.h \
     FCProject.h \

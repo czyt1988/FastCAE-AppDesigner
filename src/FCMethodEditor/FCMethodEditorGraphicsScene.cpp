@@ -1,17 +1,17 @@
-﻿#include "FCGraphicsScene.h"
+﻿#include "FCMethodEditorGraphicsScene.h"
 //Qt
 #include <QMatrix>
 #include <QKeyEvent>
 #include <QDebug>
 
 
-FCGraphicsScene::FCGraphicsScene(QObject *parent) : QGraphicsScene(parent)
+FCMethodEditorGraphicsScene::FCMethodEditorGraphicsScene(QObject *parent) : FCNodeGraphicsScene(parent)
     , m_scaleFactor(1.0)
 {
 }
 
 
-void FCGraphicsScene::keyPressEvent(QKeyEvent *keyEvent)
+void FCMethodEditorGraphicsScene::keyPressEvent(QKeyEvent *keyEvent)
 {
     if (nullptr == keyEvent) {
         return;
@@ -33,7 +33,7 @@ void FCGraphicsScene::keyPressEvent(QKeyEvent *keyEvent)
 /**
  * @brief 删除键按下操作
  */
-void FCGraphicsScene::keyDeletePressed()
+void FCMethodEditorGraphicsScene::keyDeletePressed()
 {
     if (nullptr == m_undoStack) {
         return;
@@ -51,7 +51,7 @@ void FCGraphicsScene::keyDeletePressed()
  * @brief 获取回退栈，节点支持redo/undo的必要条件
  * @return
  */
-QUndoStack *FCGraphicsScene::getUndoStack() const
+QUndoStack *FCMethodEditorGraphicsScene::getUndoStack() const
 {
     return (m_undoStack);
 }
@@ -61,13 +61,7 @@ QUndoStack *FCGraphicsScene::getUndoStack() const
  * @brief 设置回退栈，节点支持redo/undo的必要条件
  * @param undoStack
  */
-void FCGraphicsScene::setUndoStack(QUndoStack *undoStack)
+void FCMethodEditorGraphicsScene::setUndoStack(QUndoStack *undoStack)
 {
     m_undoStack = undoStack;
 }
-
-
-//void FCGraphicsScene::callNodeRotationChanged(FCGraphicsNodeItem *item)
-//{
-//    emit nodeRotationChanged(item);
-//}

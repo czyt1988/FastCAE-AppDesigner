@@ -31,7 +31,7 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="FCNodeGraphicsView" name="graphicsView"/>
+     <widget class="FCMethodEditorGraphicsView" name="graphicsView"/>
     </item>
    </layout>
   </widget>
@@ -123,9 +123,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>FCNodeGraphicsView</class>
+   <class>FCMethodEditorGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>FCNodeGraphicsView.h</header>
+   <header>FCMethodEditorGraphicsView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
