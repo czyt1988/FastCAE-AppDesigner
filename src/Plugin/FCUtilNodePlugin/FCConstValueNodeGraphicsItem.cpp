@@ -9,11 +9,12 @@ FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem(QGraphicsItem *p)
     metaData().setNodePrototype("FC.Util.Const");
     metaData().setNodeName(QObject::tr("variant"));
     metaData().setGroup(QObject::tr("common"));
+    QList<FCNodeLinkPoint>& lps = linkPoints();
 
-    m_linkPoints.append(FCNodeLinkPoint(QPoint(50-4, 25), "out", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::East));
-    m_linkPoints.append(FCNodeLinkPoint(QPoint(25, 50-4), "out1", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::South));
-    m_linkPoints.append(FCNodeLinkPoint(QPoint(0+4, 25), "out2", FCNodeLinkPoint::Input, FCNodeLinkPoint::West));
-    m_linkPoints.append(FCNodeLinkPoint(QPoint(25, 0+4), "out3", FCNodeLinkPoint::Input, FCNodeLinkPoint::North));
+    lps.append(FCNodeLinkPoint(QPoint(50-4, 25), "out", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::East));
+    lps.append(FCNodeLinkPoint(QPoint(25, 50-4), "out1", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::South));
+    lps.append(FCNodeLinkPoint(QPoint(0+4, 25), "in1", FCNodeLinkPoint::Input, FCNodeLinkPoint::West));
+    lps.append(FCNodeLinkPoint(QPoint(25, 0+4), "in2", FCNodeLinkPoint::Input, FCNodeLinkPoint::North));
 }
 
 
@@ -72,12 +73,6 @@ bool FCConstValueNodeGraphicsItem::isNull() const
     b &= m_value.isNull();
     b &= checkType();
     return (b);
-}
-
-
-QList<FCNodeLinkPoint> FCConstValueNodeGraphicsItem::getLinkPoints() const
-{
-    return (m_linkPoints);
 }
 
 

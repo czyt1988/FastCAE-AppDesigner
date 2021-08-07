@@ -9,13 +9,6 @@
 class FCUTILNODEPLUGIN_API FCConstValueNodeGraphicsItem : public FCAbstractNodeGraphicsItem
 {
 public:
-    enum { Type = FastCAE::GraphicsNodeItemConst };
-    int type() const override
-    {
-        return (Type);
-    }
-
-
     FCConstValueNodeGraphicsItem(QGraphicsItem *p = nullptr);
     ~FCConstValueNodeGraphicsItem();
 
@@ -29,8 +22,6 @@ public:
     //判断数据是否为空
     bool isNull() const;
 
-    //返回连接点信息
-    virtual QList<FCNodeLinkPoint> getLinkPoints() const;
 
 public:
     //绘图

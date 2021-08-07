@@ -5,3 +5,5 @@ build*
 *.dll
 *.lib
 *.user.*
+*.zip
+*.7z

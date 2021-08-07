@@ -27,6 +27,7 @@ HEADERS += \
     FCNodeLinkPoint.h \
     FCNodeMetaData.h \
     FCNodePalette.h \
+    FCNodeStandardLinkGraphicsItem.h \
     FCProperties.h
 
 
@@ -39,6 +40,7 @@ SOURCES += \
     FCNodeLinkPoint.cpp \
     FCNodeMetaData.cpp \
     FCNodePalette.cpp \
+    FCNodeStandardLinkGraphicsItem.cpp \
     FCProperties.cpp
 
 

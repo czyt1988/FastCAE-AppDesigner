@@ -16,6 +16,8 @@ class FCNODE_API FCAbstractNodeGraphicsItem : public QGraphicsItem
 {
     FC_IMPL(FCAbstractNodeGraphicsItem)
     friend class FCAbstractNodeGraphicsFactory;
+    friend class FCAbstractNodeLinkGraphicsItem;
+    friend class FCNodeGraphicsScene;
 public:
     enum { Type = FastCAE::GraphicsNodeItem };
     int type() const
@@ -46,7 +48,13 @@ public:
     void setMetaData(const FCNodeMetaData& metadata);
 
     //获取连接点
-    virtual QList<FCNodeLinkPoint> getLinkPoints() const = 0;
+    const QList<FCNodeLinkPoint>& getLinkPoints() const;
+
+    //通过名字获取连接点
+    FCNodeLinkPoint getLinkPoint(const QString& name) const;
+
+    //判断是否存在连接点
+    bool isHaveLinkPoint(const FCNodeLinkPoint& pl) const;
 
     //绘制连接点
     virtual void paintLinkPoints(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -62,6 +70,9 @@ public:
 protected:
     //鼠标事件
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+    //获取连接点的内存引用
+    QList<FCNodeLinkPoint>& linkPoints();
 };
 
 #endif // FCNODEGRAPHICSITEM_H

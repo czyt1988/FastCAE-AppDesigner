@@ -4,6 +4,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "FCNodeGraphicsScene.h"
 #include "FCNodePalette.h"
+#include "FCAbstractNodeLinkGraphicsItem.h"
 ////////////////////////////////////////////////////////////////////////
 
 
@@ -12,6 +13,8 @@ class FCAbstractNodeGraphicsItemPrivate {
 public:
     FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p);
     FCNodeMetaData _meta;
+    QList<FCNodeLinkPoint> _linkPoints;             ///< 这里存放所有的linkpoint
+    QList<FCAbstractNodeLinkGraphicsItem *> _links; ///< 这里记录所有的link
 };
 
 FCAbstractNodeGraphicsItemPrivate::FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p)
@@ -105,13 +108,61 @@ void FCAbstractNodeGraphicsItem::setMetaData(const FCNodeMetaData& metadata)
 
 
 /**
+ * @brief 获取连接点群
+ * @return
+ */
+const QList<FCNodeLinkPoint>& FCAbstractNodeGraphicsItem::getLinkPoints() const
+{
+    return (d_ptr->_linkPoints);
+}
+
+
+/**
+ * @brief 获取连接点
+ * @param name
+ * @return
+ */
+FCNodeLinkPoint FCAbstractNodeGraphicsItem::getLinkPoint(const QString& name) const
+{
+    const QList<FCNodeLinkPoint>& lps = getLinkPoints();
+
+    for (const FCNodeLinkPoint& lp : lps)
+    {
+        if (lp == name) {
+            return (lp);
+        }
+    }
+    return (FCNodeLinkPoint());
+}
+
+
+/**
+ * @brief 判断是否存在连接点
+ * @param pl
+ * @return
+ */
+bool FCAbstractNodeGraphicsItem::isHaveLinkPoint(const FCNodeLinkPoint& pl) const
+{
+    const QList<FCNodeLinkPoint>& lps = getLinkPoints();
+
+    for (const FCNodeLinkPoint& p : lps)
+    {
+        if (p == pl) {
+            return (true);
+        }
+    }
+    return (false);
+}
+
+
+/**
  * @brief 绘制默认连接点
  *
  * 每个连接点的绘制调用@sa paintLinkPoint 函数,因此实例化重载应该重载@sa paintLinkPoint 函数
  */
 void FCAbstractNodeGraphicsItem::paintLinkPoints(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QList<FCNodeLinkPoint> lps = getLinkPoints();
+    const QList<FCNodeLinkPoint>& lps = getLinkPoints();
 
     for (const FCNodeLinkPoint& lp : lps)
     {
@@ -191,4 +242,10 @@ void FCAbstractNodeGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event
             return;
         }
     }
+}
+
+
+QList<FCNodeLinkPoint>& FCAbstractNodeGraphicsItem::linkPoints()
+{
+    return (d_ptr->_linkPoints);
 }
