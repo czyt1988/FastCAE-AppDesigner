@@ -1,48 +1,51 @@
-﻿#include "FCGraphicsView.h"
+﻿#include "FCNodeGraphicsView.h"
 #include <QMatrix>
 #include <QWheelEvent>
 #include <QPainter>
 #include <QDebug>
-FCGraphicsView::FCGraphicsView(QWidget *parent) : QGraphicsView(parent)
+FCNodeGraphicsView::FCNodeGraphicsView(QWidget *parent) : QGraphicsView(parent)
     , m_enableShowScenePos(false)
     , m_enaleWheelZoom(true)
     , m_scaleMax(3)
     , m_scaleMin(0.333)
     , m_zoomStep(0.1)
 {
+    //把鼠标移动事件捕获
+    setMouseTracking(true);
 }
 
 
-FCGraphicsView::FCGraphicsView(QGraphicsScene *scene, QWidget *parent)
+FCNodeGraphicsView::FCNodeGraphicsView(QGraphicsScene *scene, QWidget *parent)
     : QGraphicsView(scene, parent)
     , m_enaleWheelZoom(true)
     , m_scaleMax(3)
     , m_scaleMin(0.333)
     , m_zoomStep(0.1)
 {
+    setMouseTracking(true);
 }
 
 
-void FCGraphicsView::setScaleRange(qreal min, qreal max)
+void FCNodeGraphicsView::setScaleRange(qreal min, qreal max)
 {
     m_scaleMin = min;
     m_scaleMax = max;
 }
 
 
-qreal FCGraphicsView::getScaleMaxFactor() const
+qreal FCNodeGraphicsView::getScaleMaxFactor() const
 {
     return (m_scaleMax);
 }
 
 
-qreal FCGraphicsView::getScaleMinFactor() const
+qreal FCNodeGraphicsView::getScaleMinFactor() const
 {
     return (m_scaleMin);
 }
 
 
-void FCGraphicsView::wheelEvent(QWheelEvent *event)
+void FCNodeGraphicsView::wheelEvent(QWheelEvent *event)
 {
     QMatrix old_matrix = matrix();
 
@@ -62,7 +65,7 @@ void FCGraphicsView::wheelEvent(QWheelEvent *event)
 }
 
 
-void FCGraphicsView::mouseMoveEvent(QMouseEvent *event)
+void FCNodeGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     if (event) {
         m_mouseScenePos = mapToScene(event->pos());
@@ -71,25 +74,25 @@ void FCGraphicsView::mouseMoveEvent(QMouseEvent *event)
 }
 
 
-bool FCGraphicsView::isEnableShowScenePos() const
+bool FCNodeGraphicsView::isEnableShowScenePos() const
 {
     return (m_enableShowScenePos);
 }
 
 
-void FCGraphicsView::setEnableShowScenePos(bool enableShowScenePos)
+void FCNodeGraphicsView::setEnableShowScenePos(bool enableShowScenePos)
 {
     m_enableShowScenePos = enableShowScenePos;
 }
 
 
-bool FCGraphicsView::isEnaleWheelZoom() const
+bool FCNodeGraphicsView::isEnaleWheelZoom() const
 {
     return (m_enaleWheelZoom);
 }
 
 
-void FCGraphicsView::setEnaleWheelZoom(bool enaleWheelZoom)
+void FCNodeGraphicsView::setEnaleWheelZoom(bool enaleWheelZoom)
 {
     m_enaleWheelZoom = enaleWheelZoom;
 }

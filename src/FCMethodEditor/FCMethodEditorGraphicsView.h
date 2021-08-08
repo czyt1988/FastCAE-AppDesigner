@@ -1,7 +1,7 @@
 ﻿#ifndef FCMETHODEDITORGRAPHICSVIEW_H
 #define FCMETHODEDITORGRAPHICSVIEW_H
 #include <QtCore/qglobal.h>
-#include "FCGraphicsView.h"
+#include "FCNodeGraphicsView.h"
 #include "FCProject.h"
 #include "FCMethodEditorNodeFactory.h"
 #include "FCMethodEditorGraphicsScene.h"
@@ -12,7 +12,7 @@ class GProject;
 /**
  * @brief 用于节点显示的GraphicsView
  */
-class FCMethodEditorGraphicsView : public FCGraphicsView
+class FCMethodEditorGraphicsView : public FCNodeGraphicsView
 {
 public:
     FCMethodEditorGraphicsView(QWidget *parent = 0);

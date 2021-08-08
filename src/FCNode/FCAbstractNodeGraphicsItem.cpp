@@ -6,6 +6,32 @@
 #include "FCNodePalette.h"
 #include "FCAbstractNodeLinkGraphicsItem.h"
 ////////////////////////////////////////////////////////////////////////
+class _LinkData {
+public:
+    _LinkData();
+    _LinkData(FCAbstractNodeLinkGraphicsItem *i, const FCNodeLinkPoint& p);
+    FCAbstractNodeLinkGraphicsItem *linkitem;
+    FCNodeLinkPoint point;
+};
+
+bool operator ==(const _LinkData& a, const _LinkData& b);
+
+bool operator ==(const _LinkData& a, const _LinkData& b)
+{
+    return ((a.linkitem == b.linkitem) && (a.point == b.point));
+}
+
+
+_LinkData::_LinkData() : linkitem(nullptr)
+{
+}
+
+
+_LinkData::_LinkData(FCAbstractNodeLinkGraphicsItem *i, const FCNodeLinkPoint& p)
+    : linkitem(i),
+    point(p)
+{
+}
 
 
 class FCAbstractNodeGraphicsItemPrivate {
@@ -13,8 +39,8 @@ class FCAbstractNodeGraphicsItemPrivate {
 public:
     FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p);
     FCNodeMetaData _meta;
-    QList<FCNodeLinkPoint> _linkPoints;             ///< 这里存放所有的linkpoint
-    QList<FCAbstractNodeLinkGraphicsItem *> _links; ///< 这里记录所有的link
+    QList<FCNodeLinkPoint> _linkPoints;     ///< 这里存放所有的linkpoint
+    QList<_LinkData> _linkDatas;            ///< 这里记录所有的link
 };
 
 FCAbstractNodeGraphicsItemPrivate::FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p)
@@ -36,6 +62,11 @@ FCAbstractNodeGraphicsItem::FCAbstractNodeGraphicsItem(QGraphicsItem *p) : QGrap
 
 FCAbstractNodeGraphicsItem::~FCAbstractNodeGraphicsItem()
 {
+    //item在删除时要通知相关的link把记录删除，否则会出现问题
+    for (const _LinkData& ld : d_ptr->_linkDatas)
+    {
+        ld.linkitem->callItemIsDestroying(this, ld.point);
+    }
 }
 
 
@@ -248,4 +279,35 @@ void FCAbstractNodeGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event
 QList<FCNodeLinkPoint>& FCAbstractNodeGraphicsItem::linkPoints()
 {
     return (d_ptr->_linkPoints);
+}
+
+
+/**
+ * @brief 此函数用于FCAbstractNodeLinkGraphicsItem在调用attachedTo/From过程中调用
+ * @param item
+ * @param pl
+ * @return 如果返回false，说明记录不成功，已经有相同的连接了
+ */
+bool FCAbstractNodeGraphicsItem::recordLink(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl)
+{
+    _LinkData d(item, pl);
+
+    if (d_ptr->_linkDatas.contains(d)) {
+        return (false);
+    }
+    d_ptr->_linkDatas.append(d);
+}
+
+
+/**
+ * @brief 连接的link在销毁时调用，把item记录的link信息消除
+ * @param item
+ * @param pl
+ * @return
+ */
+bool FCAbstractNodeGraphicsItem::callItemLinkIsDestroying(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl)
+{
+    _LinkData d(item, pl);
+
+    d_ptr->_linkDatas.removeAll(d);
 }

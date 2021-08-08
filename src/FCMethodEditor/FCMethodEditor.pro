@@ -21,7 +21,6 @@ TARGET = MethodEditor
 $$commonProAppSet($${TARGET})
 
 SOURCES += \
-    FCGraphicsView.cpp \
     FCMethodEditorGraphicsScene.cpp \
     FCMethodEditorGraphicsView.cpp \
     FCMethodEditorMainWindow.cpp \
@@ -34,7 +33,6 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
-    FCGraphicsView.h \
     FCMethodEditorGraphicsScene.h \
     FCMethodEditorGraphicsView.h \
     FCMethodEditorMainWindow.h \

@@ -46,16 +46,27 @@ bool FCNodeGraphicsScene::isStartLink() const
 }
 
 
+void FCNodeGraphicsScene::initConnect()
+{
+    qRegisterMetaType<FCNodeLinkPoint>("FCNodeLinkPoint");
+    connect(this, &FCNodeGraphicsScene::nodeItemLinkPointSelected, this, &FCNodeGraphicsScene::onNodeItemLinkPointSelected);
+}
+
+
 void FCNodeGraphicsScene::callNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp, QGraphicsSceneMouseEvent *event)
 {
     emit nodeItemLinkPointSelected(item, lp, event);
 }
 
 
-void FCNodeGraphicsScene::initConnect()
+/**
+ * @brief itemlink都没用节点连接时会调用这个函数，发出
+ * @param link
+ */
+void FCNodeGraphicsScene::callNodeItemLinkIsEmpty(FCAbstractNodeLinkGraphicsItem *link)
 {
-    qRegisterMetaType<FCNodeLinkPoint>("FCNodeLinkPoint");
-    connect(this, &FCNodeGraphicsScene::nodeItemLinkPointSelected, this, &FCNodeGraphicsScene::onNodeItemLinkPointSelected);
+    removeItem(link);
+    emit nodeLinkItemIsEmpty(link);
 }
 
 
@@ -70,7 +81,7 @@ void FCNodeGraphicsScene::onNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem
                 return;
             }
             //此时连接到to点
-            if (d_ptr->_linkingItem->attachTo(item, pl)) {
+            if (d_ptr->_linkingItem->attachTo(item, lp)) {
                 //连接成功，把item脱离管理
                 d_ptr->_linkingItem.take();
                 d_ptr->_isStartLink = false;
@@ -92,14 +103,24 @@ void FCNodeGraphicsScene::onNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem
                 return;
             }
             //把item加入
-            addItem(d_ptr->_isStartLink.get());
+            addItem(d_ptr->_linkingItem.get());
         }
     }else{
         //除开左键的所有按键都是取消
         if (isStartLink()) {
-            removeItem(d_ptr->_isStartLink.get());
-            d_ptr->_isStartLink.reset();
+            removeItem(d_ptr->_linkingItem.get());
+            d_ptr->_linkingItem.reset();
             d_ptr->_isStartLink = false;
         }
     }
+}
+
+
+void FCNodeGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    qDebug() << "FCNodeGraphicsScene::mouseMoveEvent:" << mouseEvent->pos();
+    if (isStartLink()) {
+        //此时正值连接中，把鼠标的位置发送到link中
+    }
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
 }

@@ -5,8 +5,9 @@
 #include "FCNodeMetaData.h"
 #include "FCMimeTypeFormatDefine.h"
 #include "FCMethodEditorGraphicsScene.h"
+
 FCMethodEditorGraphicsView::FCMethodEditorGraphicsView(QWidget *parent)
-    : FCGraphicsView(parent)
+    : FCNodeGraphicsView(parent)
 {
     setAcceptDrops(true);
     setScene(new FCMethodEditorGraphicsScene(this));
@@ -19,7 +20,7 @@ FCMethodEditorGraphicsView::FCMethodEditorGraphicsView(QWidget *parent)
 
 
 FCMethodEditorGraphicsView::FCMethodEditorGraphicsView(QGraphicsScene *scene, QWidget *parent)
-    : FCGraphicsView(scene, parent)
+    : FCNodeGraphicsView(scene, parent)
 {
     setAcceptDrops(true);
 }

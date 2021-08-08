@@ -1,16 +1,17 @@
 ﻿#ifndef FCGRAPHICSVIEW_H
 #define FCGRAPHICSVIEW_H
 #include <QGraphicsView>
+#include "FCNodeGlobal.h"
 class QWheelEvent;
 
 /**
  * @brief 支持缩放的GraphicsView
  */
-class FCGraphicsView : public QGraphicsView
+class FCNODE_API FCNodeGraphicsView : public QGraphicsView
 {
 public:
-    FCGraphicsView(QWidget *parent = 0);
-    FCGraphicsView(QGraphicsScene *scene, QWidget *parent = 0);
+    FCNodeGraphicsView(QWidget *parent = 0);
+    FCNodeGraphicsView(QGraphicsScene *scene, QWidget *parent = 0);
     //设置缩放的因子
     void setScaleRange(qreal min, qreal max);
     qreal getScaleMaxFactor() const;

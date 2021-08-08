@@ -24,6 +24,7 @@ HEADERS += \
     FCAbstractNodePlugin.h \
     FCNodeGlobal.h \
     FCNodeGraphicsScene.h \
+    FCNodeGraphicsView.h \
     FCNodeLinkPoint.h \
     FCNodeMetaData.h \
     FCNodePalette.h \
@@ -37,6 +38,7 @@ SOURCES += \
     FCAbstractNodeLinkGraphicsItem.cpp \
     FCAbstractNodePlugin.cpp \
     FCNodeGraphicsScene.cpp \
+    FCNodeGraphicsView.cpp \
     FCNodeLinkPoint.cpp \
     FCNodeMetaData.cpp \
     FCNodePalette.cpp \

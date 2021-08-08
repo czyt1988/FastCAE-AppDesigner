@@ -23,12 +23,14 @@ public:
     }
 
 
+    //更新范围参数
+    void updateBoundingRect();
+
 public:
     FCAbstractNodeLinkGraphicsItem(QGraphicsItem *p = nullptr);
     FCAbstractNodeLinkGraphicsItem(FCAbstractNodeGraphicsItem *from, FCNodeLinkPoint pl, QGraphicsItem *p = nullptr);
     virtual ~FCAbstractNodeLinkGraphicsItem();
     QRectF boundingRect() const;
-    QPainterPath shape() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     //开始节点连接
@@ -44,8 +46,11 @@ public:
     void resetAttachTo();
 
 protected:
-    //连接的item在销毁，销毁过程对应的item会调用此函数，刷新link内容
-    void itemIsDestroying(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl);
+    //添加事件处理
+    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
+
+    //连接的item在销毁，销毁过程对应的item会调用此函数，把link记录的item信息消除
+    void callItemIsDestroying(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl);
 };
 
 

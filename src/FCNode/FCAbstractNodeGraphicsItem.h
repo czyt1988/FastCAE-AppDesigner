@@ -73,6 +73,12 @@ protected:
 
     //获取连接点的内存引用
     QList<FCNodeLinkPoint>& linkPoints();
+
+    //此函数用于FCAbstractNodeLinkGraphicsItem在调用attachedTo/From过程中调用
+    bool recordLink(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl);
+
+    //连接的link在销毁时调用，把item记录的link信息消除
+    bool callItemLinkIsDestroying(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl);
 };
 
 #endif // FCNODEGRAPHICSITEM_H
