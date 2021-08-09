@@ -42,10 +42,6 @@ public:
 };
 
 //下面是插件导出的函数指针
-typedef QString (*FP_PluginGetIID)();
-typedef QString (*FP_PluginGetName)();
-typedef QString (*FP_PluginGetVersion)();
-typedef QString (*FP_PluginGetDescription)();
 typedef FCAbstractPlugin * (*FP_PluginCreate)();
 typedef void (*FP_PluginDestory)(FCAbstractPlugin *);
 

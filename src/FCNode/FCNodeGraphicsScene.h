@@ -7,6 +7,7 @@
 #include "FCAbstractNodeLinkGraphicsItem.h"
 class QGraphicsSceneMouseEvent;
 FC_IMPL_FORWARD_DECL(FCNodeGraphicsScene)
+
 class FCNODE_API FCNodeGraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -43,8 +44,12 @@ protected slots:
     void onNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp, QGraphicsSceneMouseEvent *event);
 
 protected:
+    //鼠标点击事件
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+
     //鼠标移动事件
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+
 
     //此函数将会触发 nodeItemLinkPointSelected 信号
     void callNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& lp, QGraphicsSceneMouseEvent *event);

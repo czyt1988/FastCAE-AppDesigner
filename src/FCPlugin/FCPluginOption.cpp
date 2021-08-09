@@ -6,10 +6,6 @@ class FCPluginOptionPrivate {
     FC_IMPL_PUBLIC(FCPluginOption)
 public:
     FCPluginOptionPrivate(FCPluginOption *p);
-    FP_PluginGetIID _fpGetIID = { nullptr };
-    FP_PluginGetName _fpGetName = { nullptr };
-    FP_PluginGetVersion _fpGetVersion = { nullptr };
-    FP_PluginGetDescription _fpGetDescription = { nullptr };
     FP_PluginCreate _fpCreate = { nullptr };
     FP_PluginDestory _fpDestory = { nullptr };
     FCAbstractPlugin *_plugin = { nullptr };
@@ -73,11 +69,7 @@ FCPluginOption::~FCPluginOption()
  */
 bool FCPluginOption::isValid() const
 {
-    if ((d_ptr->_fpGetIID == nullptr) ||
-        (d_ptr->_fpGetName == nullptr) ||
-        (d_ptr->_fpGetVersion == nullptr) ||
-        (d_ptr->_fpGetDescription == nullptr) ||
-        (d_ptr->_fpCreate == nullptr) ||
+    if ((d_ptr->_fpCreate == nullptr) ||
         (d_ptr->_fpDestory == nullptr)) {
         return (false);
     }
@@ -97,30 +89,11 @@ bool FCPluginOption::load(const QString& pluginPath)
         qWarning() << QObject::tr("Failed to load %1 (Reason: %2)").arg(getFileName(), getErrorString());
         return (false);
     }
-    FP_PluginGetIID getIID = (FP_PluginGetIID)(d_ptr->_lib->resolve("plugin_get_iid"));
-    FP_PluginGetName getName = (FP_PluginGetName)(d_ptr->_lib->resolve("plugin_get_name"));
-    FP_PluginGetVersion getVersion = (FP_PluginGetVersion)(d_ptr->_lib->resolve("plugin_get_version"));
-    FP_PluginGetDescription getDescription = (FP_PluginGetDescription)(d_ptr->_lib->resolve("plugin_get_description"));
     FP_PluginCreate createplugin = (FP_PluginCreate)(d_ptr->_lib->resolve("plugin_create"));
     FP_PluginDestory destoryplugin = (FP_PluginDestory)(d_ptr->_lib->resolve("plugin_destory"));
     bool isok = true;
 
-    if (getIID == nullptr) {
-        isok = false;
-        qDebug() << QObject::tr("cannot resolve plugin_get_iid");
-    }
-    if (getName == nullptr) {
-        isok = false;
-        qDebug() << QObject::tr("cannot resolve plugin_get_name");
-    }
-    if (getVersion == nullptr) {
-        isok = false;
-        qDebug() << QObject::tr("cannot resolve plugin_get_version");
-    }
-    if (getDescription == nullptr) {
-        isok = false;
-        qDebug() << QObject::tr("cannot resolve plugin_get_description");
-    }
+
     if (createplugin == nullptr) {
         isok = false;
         qDebug() << QObject::tr("cannot resolve plugin_create");
@@ -132,10 +105,6 @@ bool FCPluginOption::load(const QString& pluginPath)
     if (!isok) {
         return (false);
     }
-    d_ptr->_fpGetIID = getIID;
-    d_ptr->_fpGetName = getName;
-    d_ptr->_fpGetVersion = getVersion;
-    d_ptr->_fpGetDescription = getDescription;
     d_ptr->_fpCreate = createplugin;
     d_ptr->_fpDestory = destoryplugin;
     //最后创建一个插件
@@ -167,8 +136,8 @@ QString FCPluginOption::getFileName() const
  */
 QString FCPluginOption::getIid() const
 {
-    if (d_ptr->_fpGetIID) {
-        return (d_ptr->_fpGetIID());
+    if (plugin()) {
+        return (plugin()->getIID());
     }
     return (QString());
 }
@@ -190,8 +159,8 @@ FCAbstractPlugin *FCPluginOption::plugin() const
  */
 QString FCPluginOption::getPluginName() const
 {
-    if (d_ptr->_fpGetName) {
-        return (d_ptr->_fpGetName());
+    if (plugin()) {
+        return (plugin()->getName());
     }
     return (QString());
 }
@@ -203,8 +172,8 @@ QString FCPluginOption::getPluginName() const
  */
 QString FCPluginOption::getPluginDescription() const
 {
-    if (d_ptr->_fpGetDescription) {
-        return (d_ptr->_fpGetDescription());
+    if (plugin()) {
+        return (plugin()->getDescription());
     }
     return (QString());
 }
@@ -216,8 +185,8 @@ QString FCPluginOption::getPluginDescription() const
  */
 QString FCPluginOption::getPluginVersion() const
 {
-    if (d_ptr->_fpGetVersion) {
-        return (d_ptr->_fpGetVersion());
+    if (plugin()) {
+        return (plugin()->getVersion());
     }
     return (QString());
 }

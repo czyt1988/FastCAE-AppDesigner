@@ -296,6 +296,7 @@ bool FCAbstractNodeGraphicsItem::recordLink(FCAbstractNodeLinkGraphicsItem *link
         return (false);
     }
     d_ptr->_linkDatas.append(d);
+    return (true);
 }
 
 
@@ -309,5 +310,5 @@ bool FCAbstractNodeGraphicsItem::callItemLinkIsDestroying(FCAbstractNodeLinkGrap
 {
     _LinkData d(link, pl);
 
-    d_ptr->_linkDatas.removeAll(d);
+    return (d_ptr->_linkDatas.removeAll(d) > 0);
 }

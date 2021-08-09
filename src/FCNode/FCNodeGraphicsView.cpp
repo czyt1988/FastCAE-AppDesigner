@@ -11,7 +11,7 @@ FCNodeGraphicsView::FCNodeGraphicsView(QWidget *parent) : QGraphicsView(parent)
     , m_zoomStep(0.1)
 {
     //把鼠标移动事件捕获
-    setMouseTracking(true);
+    //setMouseTracking(true);
 }
 
 
@@ -22,7 +22,7 @@ FCNodeGraphicsView::FCNodeGraphicsView(QGraphicsScene *scene, QWidget *parent)
     , m_scaleMin(0.333)
     , m_zoomStep(0.1)
 {
-    setMouseTracking(true);
+    //setMouseTracking(true);
 }
 
 

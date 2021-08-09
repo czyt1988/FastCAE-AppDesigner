@@ -2,30 +2,6 @@
 #include "FCNodeGraphicsFactory.h"
 #include <QObject>
 
-QString plugin_get_iid()
-{
-    return ("FC.FCUtilNodePlugin");
-}
-
-
-QString plugin_get_name()
-{
-    return ("FC Util Nodes");
-}
-
-
-QString plugin_get_version()
-{
-    return ("version 0.1.1");
-}
-
-
-QString plugin_get_description()
-{
-    return (QObject::tr("FastCAE Util Nodes"));
-}
-
-
 FCAbstractPlugin *plugin_create()
 {
     return (new FCUtilNodePlugin());
@@ -34,6 +10,7 @@ FCAbstractPlugin *plugin_create()
 
 void plugin_destory(FCAbstractPlugin *p)
 {
+    delete p;
 }
 
 
@@ -49,25 +26,25 @@ FCUtilNodePlugin::~FCUtilNodePlugin()
 
 QString FCUtilNodePlugin::getIID() const
 {
-    return (plugin_get_iid());
+    return ("FC.FCUtilNodePlugin");
 }
 
 
 QString FCUtilNodePlugin::getName() const
 {
-    return (plugin_get_name());
+    return ("FC Util Nodes");
 }
 
 
 QString FCUtilNodePlugin::getVersion() const
 {
-    return (plugin_get_version());
+    return ("version 0.1.1");
 }
 
 
 QString FCUtilNodePlugin::getDescription() const
 {
-    return (plugin_get_description());
+    return ("FastCAE Util Nodes");
 }
 
 

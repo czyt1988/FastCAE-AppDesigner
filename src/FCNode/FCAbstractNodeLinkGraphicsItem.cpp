@@ -89,10 +89,16 @@ void FCAbstractNodeLinkGraphicsItem::updateBoundingRect()
         d_ptr->_toPos = mapFromScene(sc->getCurrentMouseScenePos());
         //重新设置rect的topleft和buttomright
         d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos);
+        qDebug()	<< "[from-null to] from:" << d_ptr->_fromPos << " to:" << d_ptr->_toPos
+                << " boundingRect:" << d_ptr->_boundingRect;
+        update();
     }else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem != nullptr)) {
         //两个都不为空
         d_ptr->_toPos = mapFromItem(d_ptr->_toItem, d_ptr->_toPoint.position);
         d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos);
+        qDebug()	<< "[from-to] from:" << d_ptr->_fromPos << " to:" << d_ptr->_toPos
+                << " boundingRect:" << d_ptr->_boundingRect;
+        update();
     }
 }
 

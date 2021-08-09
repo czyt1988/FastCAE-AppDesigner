@@ -4,9 +4,9 @@
 #include "FCGlobals.h"
 
 #if defined(FCNODE_BUILDLIB)
-#define FCNODE_API    Q_DECL_EXPORT
+#define FCNODE_API	Q_DECL_EXPORT
 #else
-#define  FCNODE_API
+#define  FCNODE_API	Q_DECL_IMPORT
 #endif
 
 #include <QGraphicsItem>
