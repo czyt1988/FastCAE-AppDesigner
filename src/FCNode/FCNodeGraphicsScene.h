@@ -12,12 +12,17 @@ class FCNODE_API FCNodeGraphicsScene : public QGraphicsScene
     Q_OBJECT
     FC_IMPL(FCNodeGraphicsScene)
     friend class FCAbstractNodeGraphicsItem;
+    friend class FCAbstractNodeLinkGraphicsItem;
 public:
     FCNodeGraphicsScene(QObject *p = nullptr);
     FCNodeGraphicsScene(const QRectF& sceneRect, QObject *p = nullptr);
     FCNodeGraphicsScene(qreal x, qreal y, qreal width, qreal height, QObject *p = nullptr);
+    ~FCNodeGraphicsScene();
     //判断是否处于开始连接状态
     bool isStartLink() const;
+
+    //获取当前鼠标在scene的位置
+    QPointF getCurrentMouseScenePos() const;
 
 signals:
 

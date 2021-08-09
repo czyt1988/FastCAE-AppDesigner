@@ -3,7 +3,7 @@
 #include <QDebug>
 #include "FCAbstractNodeGraphicsItem.h"
 #include "FCNodeGraphicsScene.h"
-
+#include "FCNodePalette.h"
 class FCAbstractNodeLinkGraphicsItemPrivate {
     FC_IMPL_PUBLIC(FCAbstractNodeLinkGraphicsItem)
 public:
@@ -79,16 +79,33 @@ void FCAbstractNodeLinkGraphicsItem::updateBoundingRect()
     }
     d_ptr->_fromPos = QPointF(0, 0);
     d_ptr->_toPos = QPointF(100, 100);
-    d_ptr->_boundingRect = QRectF(0, 0, 100, 100);
     if ((d_ptr->_fromItem == nullptr) && (d_ptr->_toItem == nullptr)) {
         //都是空退出
+        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos);
         return;
     } else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem == nullptr)) {
         //只设定了一个from
         // to要根据scene的鼠标位置实时刷新
-    }else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem != nullptr))       {
-        //
+        d_ptr->_toPos = mapFromScene(sc->getCurrentMouseScenePos());
+        //重新设置rect的topleft和buttomright
+        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos);
+    }else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem != nullptr)) {
+        //两个都不为空
+        d_ptr->_toPos = mapFromItem(d_ptr->_toItem, d_ptr->_toPoint.position);
+        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos);
     }
+}
+
+
+/**
+ * @brief 通过两个点形成一个矩形，两个点总能形成一个矩形，如果重合，返回一个空矩形
+ * @param p0
+ * @param p1
+ * @return
+ */
+QRectF FCAbstractNodeLinkGraphicsItem::rectFromTwoPoint(const QPointF& p0, const QPointF& p1)
+{
+    return (QRectF(QPointF(qMin(p0.x(), p1.x()), qMin(p0.y(), p1.y())), QPointF(qMax(p0.x(), p1.x()), qMax(p0.y(), p1.y()))));
 }
 
 
@@ -100,6 +117,12 @@ QRectF FCAbstractNodeLinkGraphicsItem::boundingRect() const
 
 void FCAbstractNodeLinkGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->save();
+    QPen pen(FCNodePalette::getGlobalLinkLineColor());
+
+    painter->setPen(pen);
+    painter->drawLine(d_ptr->_fromPos, d_ptr->_toPos);
+    painter->restore();
 }
 
 

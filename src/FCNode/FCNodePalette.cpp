@@ -7,7 +7,7 @@ FCNodePalette::FCNodePalette()
         <<QColor(78, 103, 200)  //RoleEdge
         <<QColor(255, 255, 255) //RoleBackground
         <<QColor(70, 175, 147)  //RoleLink
-        <<QColor(93, 206, 175)
+        <<QColor(93, 206, 175)  //RoleLinkLine
         <<QColor(255, 128, 33)
         <<QColor(241, 65, 36)
     ;
@@ -50,9 +50,15 @@ const QColor& FCNodePalette::getGlobalBackgroundColor()
 }
 
 
-const QColor& FCNodePalette::getGlobalLinkColor()
+const QColor& FCNodePalette::getGlobalLinkPointColor()
 {
-    return (s_default_node_palette.getLinkColor());
+    return (s_default_node_palette.getLinkPointColor());
+}
+
+
+const QColor& FCNodePalette::getGlobalLinkLineColor()
+{
+    return (s_default_node_palette.getLinkLineColor());
 }
 
 
@@ -80,7 +86,13 @@ const QColor& FCNodePalette::getBackgroundColor() const
 }
 
 
-const QColor& FCNodePalette::getLinkColor() const
+const QColor& FCNodePalette::getLinkPointColor() const
 {
-    return (getColor(RoleLink));
+    return (getColor(RoleLinkPoint));
+}
+
+
+const QColor& FCNodePalette::getLinkLineColor() const
+{
+    return (getColor(RoleLinkLine));
 }

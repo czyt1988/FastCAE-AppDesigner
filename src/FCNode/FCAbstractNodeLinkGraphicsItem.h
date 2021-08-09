@@ -26,6 +26,9 @@ public:
     //更新范围参数
     void updateBoundingRect();
 
+    //通过两个点形成一个矩形，两个点总能形成一个矩形，如果重合，返回一个空矩形
+    static QRectF rectFromTwoPoint(const QPointF& p0, const QPointF& p1);
+
 public:
     FCAbstractNodeLinkGraphicsItem(QGraphicsItem *p = nullptr);
     FCAbstractNodeLinkGraphicsItem(FCAbstractNodeGraphicsItem *from, FCNodeLinkPoint pl, QGraphicsItem *p = nullptr);

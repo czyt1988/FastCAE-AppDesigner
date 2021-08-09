@@ -23,7 +23,8 @@ public:
         RoleText	= 0,    ///< 文本颜色
         RoleEdge	= 1,    ///< 边框颜色
         RoleBackground	= 2,    ///< 背景颜色
-        RoleLink	= 3     ///< 连接点的背景
+        RoleLinkPoint	= 3,    ///< 连接点的背景
+        RoleLinkLine	= 4     ///< 连接线的颜色
     };
     FCNodePalette();
     static const FCNodePalette& getGlobalPalette();
@@ -32,13 +33,15 @@ public:
     static const QColor& getGlobalTextColor();
     static const QColor& getGlobalEdgeColor();
     static const QColor& getGlobalBackgroundColor();
-    static const QColor& getGlobalLinkColor();
+    static const QColor& getGlobalLinkPointColor();
+    static const QColor& getGlobalLinkLineColor();
 
     const QColor& getColor(Role r) const;
     const QColor& getTextColor() const;
     const QColor& getEdgeColor() const;
     const QColor& getBackgroundColor() const;
-    const QColor& getLinkColor() const;
+    const QColor& getLinkPointColor() const;
+    const QColor& getLinkLineColor() const;
 
 private:
     QList<QColor> m_colors;///< 存放所有颜色

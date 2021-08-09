@@ -212,7 +212,7 @@ void FCAbstractNodeGraphicsItem::paintLinkPoint(const FCNodeLinkPoint& pl, QPain
     painter->save();
     //连接点是一个长方形，6X8,点中心是长方形中心
     //先把painter坐标变换到点处
-    QColor clr = FCNodePalette::getGlobalLinkColor();
+    QColor clr = FCNodePalette::getGlobalLinkPointColor();
     QRect pointrange = getlinkPointRect(pl);// 横版矩形，对应East，West
 
     painter->setPen(clr);
@@ -288,9 +288,9 @@ QList<FCNodeLinkPoint>& FCAbstractNodeGraphicsItem::linkPoints()
  * @param pl
  * @return 如果返回false，说明记录不成功，已经有相同的连接了
  */
-bool FCAbstractNodeGraphicsItem::recordLink(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl)
+bool FCAbstractNodeGraphicsItem::recordLink(FCAbstractNodeLinkGraphicsItem *link, const FCNodeLinkPoint& pl)
 {
-    _LinkData d(item, pl);
+    _LinkData d(link, pl);
 
     if (d_ptr->_linkDatas.contains(d)) {
         return (false);
@@ -305,9 +305,9 @@ bool FCAbstractNodeGraphicsItem::recordLink(FCAbstractNodeGraphicsItem *item, co
  * @param pl
  * @return
  */
-bool FCAbstractNodeGraphicsItem::callItemLinkIsDestroying(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl)
+bool FCAbstractNodeGraphicsItem::callItemLinkIsDestroying(FCAbstractNodeLinkGraphicsItem *link, const FCNodeLinkPoint& pl)
 {
-    _LinkData d(item, pl);
+    _LinkData d(link, pl);
 
     d_ptr->_linkDatas.removeAll(d);
 }

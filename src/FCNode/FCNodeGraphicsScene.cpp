@@ -8,9 +8,11 @@ public:
     FCNodeGraphicsScenePrivate(FCNodeGraphicsScene *p);
     bool _isStartLink;
     QScopedPointer<FCNodeStandardLinkGraphicsItem> _linkingItem;
+    QPointF _lastMouseScenePos;
 };
 
-FCNodeGraphicsScenePrivate::FCNodeGraphicsScenePrivate(FCNodeGraphicsScene *p) : q_ptr(p)
+FCNodeGraphicsScenePrivate::FCNodeGraphicsScenePrivate(FCNodeGraphicsScene *p)
+    : q_ptr(p)
     , _isStartLink(false)
 {
 }
@@ -40,9 +42,20 @@ FCNodeGraphicsScene::FCNodeGraphicsScene(qreal x, qreal y, qreal width, qreal he
 }
 
 
+FCNodeGraphicsScene::~FCNodeGraphicsScene()
+{
+}
+
+
 bool FCNodeGraphicsScene::isStartLink() const
 {
     return (d_ptr->_isStartLink);
+}
+
+
+QPointF FCNodeGraphicsScene::getCurrentMouseScenePos() const
+{
+    return (d_ptr->_lastMouseScenePos);
 }
 
 
@@ -118,9 +131,18 @@ void FCNodeGraphicsScene::onNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem
 
 void FCNodeGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    qDebug() << "FCNodeGraphicsScene::mouseMoveEvent:" << mouseEvent->pos();
-    if (isStartLink()) {
+    qDebug()	<< "FCNodeGraphicsScene::mouseMoveEvent pos:" << mouseEvent->pos()
+            << " screenPos:" << mouseEvent->screenPos()
+            << " scenePos:" << mouseEvent->scenePos()
+            << " buttons:" << mouseEvent->buttons()
+    ;
+    if (nullptr == mouseEvent) {
+        return;
+    }
+    d_ptr->_lastMouseScenePos = mouseEvent->scenePos();
+    if (isStartLink() && !(d_ptr->_linkingItem.isNull())) {
         //此时正值连接中，把鼠标的位置发送到link中
+        d_ptr->_linkingItem->updateBoundingRect();
     }
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }

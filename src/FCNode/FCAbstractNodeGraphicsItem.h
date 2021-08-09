@@ -5,7 +5,7 @@
 #include <QIcon>
 #include "FCNodeMetaData.h"
 #include "FCNodeLinkPoint.h"
-
+class FCAbstractNodeLinkGraphicsItem;
 FC_IMPL_FORWARD_DECL(FCAbstractNodeGraphicsItem)
 
 /**
@@ -75,10 +75,10 @@ protected:
     QList<FCNodeLinkPoint>& linkPoints();
 
     //此函数用于FCAbstractNodeLinkGraphicsItem在调用attachedTo/From过程中调用
-    bool recordLink(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl);
+    bool recordLink(FCAbstractNodeLinkGraphicsItem *link, const FCNodeLinkPoint& pl);
 
     //连接的link在销毁时调用，把item记录的link信息消除
-    bool callItemLinkIsDestroying(FCAbstractNodeGraphicsItem *item, const FCNodeLinkPoint& pl);
+    bool callItemLinkIsDestroying(FCAbstractNodeLinkGraphicsItem *link, const FCNodeLinkPoint& pl);
 };
 
 #endif // FCNODEGRAPHICSITEM_H
