@@ -4,6 +4,7 @@
 #include "FCAbstractNodeGraphicsItem.h"
 #include "FCNodeGraphicsScene.h"
 #include "FCNodePalette.h"
+#include <math.h>
 class FCAbstractNodeLinkGraphicsItemPrivate {
     FC_IMPL_PUBLIC(FCAbstractNodeLinkGraphicsItem)
 public:
@@ -16,7 +17,9 @@ public:
     FCNodeLinkPoint _toPoint;
     QPointF _fromPos;
     QPointF _toPos;
-    QRectF _boundingRect; ///< 记录boundingRect
+    QRectF _boundingRect;           ///< 记录boundingRect
+    qreal _bezierControlScale;      ///<贝塞尔曲线的控制点的缩放比例
+    QPainterPath _linePath;         ///< 通过点得到的绘图线段
 };
 
 FCAbstractNodeLinkGraphicsItemPrivate::FCAbstractNodeLinkGraphicsItemPrivate(FCAbstractNodeLinkGraphicsItem *p)
@@ -26,6 +29,7 @@ FCAbstractNodeLinkGraphicsItemPrivate::FCAbstractNodeLinkGraphicsItemPrivate(FCA
     , _fromPos(0, 0)
     , _toPos(100, 100)
     , _boundingRect(0, 0, 100, 100)
+    , _bezierControlScale(0.25)
 {
 }
 
@@ -94,22 +98,29 @@ void FCAbstractNodeLinkGraphicsItem::updateBoundingRect()
     d_ptr->_toPos = QPointF(100, 100);
     if ((d_ptr->_fromItem == nullptr) && (d_ptr->_toItem == nullptr)) {
         //都是空退出
-        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos);
+        d_ptr->_fromPoint.direction = FCNodeLinkPoint::East;
+        d_ptr->_toPoint.direction = FCNodeLinkPoint::West;
+        generatePainterPath();
+        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect();
         return;
     } else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem == nullptr)) {
         //只设定了一个from
         // to要根据scene的鼠标位置实时刷新
         d_ptr->_toPos = mapFromScene(sc->getCurrentMouseScenePos());
-        //重新设置rect的topleft和buttomright
-        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos).adjusted(-1, -1, 1, 1);
-//        qDebug()	<< "[from-null to] from:" << d_ptr->_fromPos << " to:" << d_ptr->_toPos
-//                << " boundingRect:" << d_ptr->_boundingRect;
-    }else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem != nullptr)) {
+        d_ptr->_toPoint.direction = generateOppositeDirection(d_ptr->_fromPoint.direction);
+        generatePainterPath();
+        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect();
+    } else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem != nullptr)) {
         //两个都不为空
         d_ptr->_toPos = mapFromItem(d_ptr->_toItem, d_ptr->_toPoint.position);
-        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos).adjusted(-1, -1, 1, 1);
-//        qDebug()	<< "[from-to] from:" << d_ptr->_fromPos << " to:" << d_ptr->_toPos
-//                << " boundingRect:" << d_ptr->_boundingRect;
+        generatePainterPath();
+        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect();
+    }else{
+        generatePainterPath();
+        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect();
+        qDebug()	<< "occ unknow link type,please check!, from item:" << d_ptr->_fromItem
+                << " to item:" << d_ptr->_toItem
+        ;
     }
 }
 
@@ -126,9 +137,93 @@ QRectF FCAbstractNodeLinkGraphicsItem::rectFromTwoPoint(const QPointF& p0, const
 }
 
 
+/**
+ * @brief 通过伸出点方向，得到贝塞尔曲线控制点的位置
+ * @param orgPoint 原始点
+ * @param d 伸出方向
+ * @param externLen 伸出长度
+ * @return 得到控制点
+ */
+QPointF FCAbstractNodeLinkGraphicsItem::calcCubicControlPoint(const QPointF& orgPoint, FCNodeLinkPoint::Direction d, qreal externLen)
+{
+    switch (d)
+    {
+    case FCNodeLinkPoint::East:
+        return (QPointF(orgPoint.x()+externLen, orgPoint.y()));
+
+    case FCNodeLinkPoint::South:
+        return (QPointF(orgPoint.x(), orgPoint.y()+externLen));
+
+    case FCNodeLinkPoint::West:
+        return (QPointF(orgPoint.x()-externLen, orgPoint.y()));
+
+    case FCNodeLinkPoint::North:
+        return (QPointF(orgPoint.x(), orgPoint.y()-externLen));
+    }
+    return (orgPoint);
+}
+
+
+/**
+ * @brief 计算两个点的距离
+ * @param a
+ * @param b
+ * @return
+ */
+qreal FCAbstractNodeLinkGraphicsItem::pointLength(const QPointF& a, const QPointF& b)
+{
+    return (pow((a.x()-b.x())*(a.x()-b.x())+(a.y()-b.y())*(a.y()-b.y()), 0.5));
+}
+
+
+/**
+ * @brief 通过a点的方向和a相对b的位置，生成一个相反的方向
+ * @param a
+ * @param ad
+ * @param b
+ * @return
+ */
+FCNodeLinkPoint::Direction FCAbstractNodeLinkGraphicsItem::generateOppositeDirection(FCNodeLinkPoint::Direction ad)
+{
+    switch (ad)
+    {
+    case FCNodeLinkPoint::East:
+        return (FCNodeLinkPoint::West);
+
+    case FCNodeLinkPoint::South:
+        return (FCNodeLinkPoint::North);
+
+    case FCNodeLinkPoint::West:
+        return (FCNodeLinkPoint::East);
+
+    case FCNodeLinkPoint::North:
+        return (FCNodeLinkPoint::South);
+    }
+    return (ad);
+}
+
+
+/**
+ * @brief 设置贝塞尔曲线的控制点的缩放比例
+ *
+ * FCAbstractNodeLinkGraphicsItem在连线时按照两个连接点的方向延伸出贝塞尔曲线的控制点，贝塞尔曲线的控制点的长度w = length * bezierControlScale，
+ * 其中length是两个连接点的绝对距离，可以通过@sa pointLength 计算得到，bezierControlScale，就是这个延伸的比例，如果越大，曲率越明显
+ * @param rate 默认为0.25
+ */
+void FCAbstractNodeLinkGraphicsItem::setBezierControlScale(qreal rate)
+{
+}
+
+
 QRectF FCAbstractNodeLinkGraphicsItem::boundingRect() const
 {
     return (d_ptr->_boundingRect);
+}
+
+
+QPainterPath FCAbstractNodeLinkGraphicsItem::shape() const
+{
+    return (d_ptr->_linePath);
 }
 
 
@@ -138,7 +233,8 @@ void FCAbstractNodeLinkGraphicsItem::paint(QPainter *painter, const QStyleOption
     QPen pen(FCNodePalette::getGlobalLinkLineColor());
 
     painter->setPen(pen);
-    painter->drawLine(d_ptr->_fromPos, d_ptr->_toPos);
+    painter->drawPath(d_ptr->_linePath);
+    //painter->drawLine(d_ptr->_fromPos, d_ptr->_toPos);
     painter->restore();
 }
 
@@ -204,6 +300,28 @@ void FCAbstractNodeLinkGraphicsItem::resetAttachTo()
 }
 
 
+/**
+ * @brief 生成painterpath,默认会根据连接点生成一个贝塞尔曲线
+ * 此函数在updateBoundingRect里调用
+ */
+void FCAbstractNodeLinkGraphicsItem::generatePainterPath()
+{
+    d_ptr->_linePath.clear();
+    //贝塞尔的引导线根据伸出点的方向偏移两个点距离的1/5
+    //! 1 先求出两个点距离
+    qreal length = pointLength(d_ptr->_fromPos, d_ptr->_toPos);
+
+    length *= d_ptr->_bezierControlScale;
+    //! 2.通过伸出方向，得到两个控制点的位置
+    QPointF fromcCrtlPoint = calcCubicControlPoint(d_ptr->_fromPos, d_ptr->_fromPoint.direction, length);
+    QPointF toCrtlPoint = calcCubicControlPoint(d_ptr->_toPos, d_ptr->_toPoint.direction, length);
+
+    //! 3.生成贝塞尔曲线
+    d_ptr->_linePath.moveTo(d_ptr->_fromPos);
+    d_ptr->_linePath.cubicTo(fromcCrtlPoint, toCrtlPoint, d_ptr->_toPos);
+}
+
+
 QVariant FCAbstractNodeLinkGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     switch (change)
@@ -225,12 +343,10 @@ void FCAbstractNodeLinkGraphicsItem::callItemIsDestroying(FCAbstractNodeGraphics
         //说明from要取消
         d_ptr->_fromItem = nullptr;
         d_ptr->_fromPoint = FCNodeLinkPoint();
-        qDebug() << "link _fromItem set nullptr";
     }else if ((d_ptr->_toItem == item) && (d_ptr->_toPoint == pl)) {
         //说明to要取消
         d_ptr->_toItem = nullptr;
         d_ptr->_toPoint = FCNodeLinkPoint();
-        qDebug() << "link _toItem set nullptr";
     }
     //如果from和to都为空，这时就需要自动销毁
     FCNodeGraphicsScene *sc = d_ptr->nodeScene();

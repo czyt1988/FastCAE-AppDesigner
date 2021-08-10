@@ -97,6 +97,7 @@ void FCNodeGraphicsScene::onNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem
             //此时连接到to点
             if (d_ptr->_linkingItem->attachTo(item, lp)) {
                 //连接成功，把item脱离管理
+                d_ptr->_linkingItem->updateBoundingRect();
                 d_ptr->_linkingItem.take();
                 d_ptr->_isStartLink = false;
             }
