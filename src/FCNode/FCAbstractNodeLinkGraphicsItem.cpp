@@ -58,18 +58,29 @@ FCAbstractNodeLinkGraphicsItem::FCAbstractNodeLinkGraphicsItem(FCAbstractNodeGra
 FCAbstractNodeLinkGraphicsItem::~FCAbstractNodeLinkGraphicsItem()
 {
     //析构时d调用FCAbstractNodeGraphicsItem::callItemLinkIsDestroying移除item对应记录的link
-    if (d_ptr->_fromItem) {
-        d_ptr->_fromItem->callItemLinkIsDestroying(this, d_ptr->_fromPoint);
-    }
-    if (d_ptr->_toItem) {
-        d_ptr->_toItem->callItemLinkIsDestroying(this, d_ptr->_toPoint);
-    }
+    resetAttachFrom();
+    resetAttachTo();
 }
 
 
 /**
- * @brief 更新范围参数
+ * @brief 自动根据fromitem来更新位置
+ * @note 如果设置了toitem，会调用@sa updateBoundingRect 来更新boundingRect
  */
+void FCAbstractNodeLinkGraphicsItem::updatePos()
+{
+    FCNodeGraphicsScene *sc = d_ptr->nodeScene();
+
+    if ((nullptr == d_ptr->_fromItem) || (nullptr == sc)) {
+        return;
+    }
+    setPos(d_ptr->_fromItem->mapToScene(d_ptr->_fromPoint.position));
+    if (d_ptr->_toItem) {
+        updateBoundingRect();
+    }
+}
+
+
 void FCAbstractNodeLinkGraphicsItem::updateBoundingRect()
 {
     FCNodeGraphicsScene *sc = d_ptr->nodeScene();
@@ -77,6 +88,8 @@ void FCAbstractNodeLinkGraphicsItem::updateBoundingRect()
     if (nullptr == sc) {
         return;
     }
+    //通过调用prepareGeometryChange()通知范围变更，避免出现残影
+    prepareGeometryChange();
     d_ptr->_fromPos = QPointF(0, 0);
     d_ptr->_toPos = QPointF(100, 100);
     if ((d_ptr->_fromItem == nullptr) && (d_ptr->_toItem == nullptr)) {
@@ -88,17 +101,15 @@ void FCAbstractNodeLinkGraphicsItem::updateBoundingRect()
         // to要根据scene的鼠标位置实时刷新
         d_ptr->_toPos = mapFromScene(sc->getCurrentMouseScenePos());
         //重新设置rect的topleft和buttomright
-        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos);
-        qDebug()	<< "[from-null to] from:" << d_ptr->_fromPos << " to:" << d_ptr->_toPos
-                << " boundingRect:" << d_ptr->_boundingRect;
-        update();
+        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos).adjusted(-1, -1, 1, 1);
+//        qDebug()	<< "[from-null to] from:" << d_ptr->_fromPos << " to:" << d_ptr->_toPos
+//                << " boundingRect:" << d_ptr->_boundingRect;
     }else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem != nullptr)) {
         //两个都不为空
         d_ptr->_toPos = mapFromItem(d_ptr->_toItem, d_ptr->_toPoint.position);
-        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos);
-        qDebug()	<< "[from-to] from:" << d_ptr->_fromPos << " to:" << d_ptr->_toPos
-                << " boundingRect:" << d_ptr->_boundingRect;
-        update();
+        d_ptr->_boundingRect = rectFromTwoPoint(d_ptr->_fromPos, d_ptr->_toPos).adjusted(-1, -1, 1, 1);
+//        qDebug()	<< "[from-to] from:" << d_ptr->_fromPos << " to:" << d_ptr->_toPos
+//                << " boundingRect:" << d_ptr->_boundingRect;
     }
 }
 
@@ -145,6 +156,7 @@ bool FCAbstractNodeLinkGraphicsItem::attachFrom(FCAbstractNodeGraphicsItem *item
     }
     d_ptr->_fromItem = item;
     d_ptr->_fromPoint = pl;
+    item->recordLink(this, pl);
     return (true);
 }
 
@@ -156,7 +168,10 @@ bool FCAbstractNodeLinkGraphicsItem::attachFrom(FCAbstractNodeGraphicsItem *item
  */
 void FCAbstractNodeLinkGraphicsItem::resetAttachFrom()
 {
-    d_ptr->_fromItem = nullptr;
+    if (d_ptr->_fromItem) {
+        d_ptr->_fromItem->callItemLinkIsDestroying(this, d_ptr->_fromPoint);
+        d_ptr->_fromItem = nullptr;
+    }
     d_ptr->_fromPoint = FCNodeLinkPoint();
 }
 
@@ -174,13 +189,17 @@ bool FCAbstractNodeLinkGraphicsItem::attachTo(FCAbstractNodeGraphicsItem *item, 
     }
     d_ptr->_toItem = item;
     d_ptr->_toPoint = pl;
+    item->recordLink(this, pl);
     return (true);
 }
 
 
 void FCAbstractNodeLinkGraphicsItem::resetAttachTo()
 {
-    d_ptr->_toItem = nullptr;
+    if (d_ptr->_toItem) {
+        d_ptr->_toItem->callItemLinkIsDestroying(this, d_ptr->_toPoint);
+        d_ptr->_toItem = nullptr;
+    }
     d_ptr->_toPoint = FCNodeLinkPoint();
 }
 
@@ -206,10 +225,12 @@ void FCAbstractNodeLinkGraphicsItem::callItemIsDestroying(FCAbstractNodeGraphics
         //说明from要取消
         d_ptr->_fromItem = nullptr;
         d_ptr->_fromPoint = FCNodeLinkPoint();
+        qDebug() << "link _fromItem set nullptr";
     }else if ((d_ptr->_toItem == item) && (d_ptr->_toPoint == pl)) {
         //说明to要取消
         d_ptr->_toItem = nullptr;
         d_ptr->_toPoint = FCNodeLinkPoint();
+        qDebug() << "link _toItem set nullptr";
     }
     //如果from和to都为空，这时就需要自动销毁
     FCNodeGraphicsScene *sc = d_ptr->nodeScene();

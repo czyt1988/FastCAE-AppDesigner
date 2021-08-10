@@ -55,7 +55,10 @@ FCAbstractNodeGraphicsItem::FCAbstractNodeGraphicsItem(QGraphicsItem *p) : QGrap
     , d_ptr(new FCAbstractNodeGraphicsItemPrivate(this))
 {
     d_ptr->_meta.setNodePrototype("FC.FCNodeGraphicsItem");
-    setFlags(ItemIsSelectable | ItemIsMovable);
+    setFlags(ItemIsSelectable
+        | ItemIsMovable
+        | ItemSendsGeometryChanges //确保位置改变时能发出QGraphicsItem::ItemPositionHasChanged
+        );
     setAcceptHoverEvents(true);
 }
 
@@ -245,6 +248,25 @@ QRect FCAbstractNodeGraphicsItem::getlinkPointRect(const FCNodeLinkPoint& pl) co
         break;
     }
     return (QRect(pl.position.x()-3, pl.position.y()-3, 6, 6));
+}
+
+
+/**
+ * @brief 处理一些联动事件，如和FCAbstractNodeLinkGraphicsItem的联动
+ * @param change
+ * @param value
+ * @return
+ */
+QVariant FCAbstractNodeGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+{
+    if ((ItemPositionHasChanged == change) && scene()) {
+        // 变化了位置,需要更新link item
+        for (const _LinkData& ld : d_ptr->_linkDatas)
+        {
+            ld.linkitem->updatePos();
+        }
+    }
+    return (QGraphicsItem::itemChange(change, value));
 }
 
 

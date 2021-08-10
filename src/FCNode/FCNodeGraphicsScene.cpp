@@ -78,6 +78,7 @@ void FCNodeGraphicsScene::callNodeItemLinkPointSelected(FCAbstractNodeGraphicsIt
  */
 void FCNodeGraphicsScene::callNodeItemLinkIsEmpty(FCAbstractNodeLinkGraphicsItem *link)
 {
+    qDebug() << " FCNodeGraphicsScene::callNodeItemLinkIsEmpty";
     removeItem(link);
     emit nodeLinkItemIsEmpty(link);
 }
@@ -116,16 +117,17 @@ void FCNodeGraphicsScene::onNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem
                 return;
             }
             //把item加入
-            d_ptr->_linkingItem->setPos(item->mapToScene(lp.position));
             addItem(d_ptr->_linkingItem.get());
+            d_ptr->_linkingItem->setPos(item->mapToScene(lp.position));
+            d_ptr->_linkingItem->updateBoundingRect();
         }
     }else{
         //除开左键的所有按键都是取消
         if (isStartLink()) {
             qDebug() << "will remove link";
+            d_ptr->_isStartLink = false;
             removeItem(d_ptr->_linkingItem.get());
             d_ptr->_linkingItem.reset();
-            d_ptr->_isStartLink = false;
         }
     }
 }
@@ -133,14 +135,13 @@ void FCNodeGraphicsScene::onNodeItemLinkPointSelected(FCAbstractNodeGraphicsItem
 
 void FCNodeGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    qDebug() << "mousePressEvent:" <<mouseEvent;
     if (!mouseEvent->buttons().testFlag(Qt::LeftButton)) {
         //除开左键的所有按键都是取消
         if (isStartLink()) {
             qDebug() << "will remove link";
+            d_ptr->_isStartLink = false;
             removeItem(d_ptr->_linkingItem.get());
             d_ptr->_linkingItem.reset();
-            d_ptr->_isStartLink = false;
         }
     }
     QGraphicsScene::mousePressEvent(mouseEvent);

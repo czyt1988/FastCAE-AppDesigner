@@ -9,6 +9,8 @@ class FCAbstractNodeGraphicsItem;
 
 /**
  * @brief 绘制连接线的item
+ *
+ * 注意，boundingRect的改变前需要调用prepareGeometryChange，避免出现残影
  */
 class FCNODE_API FCAbstractNodeLinkGraphicsItem : public QGraphicsItem
 {
@@ -22,6 +24,9 @@ public:
         return (Type);
     }
 
+
+    //自动根据fromitem来更新位置
+    void updatePos();
 
     //更新范围参数
     void updateBoundingRect();

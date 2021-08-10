@@ -68,6 +68,9 @@ public:
 
 
 protected:
+    //处理一些联动事件，如和FCAbstractNodeLinkGraphicsItem的联动
+    virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value);
+
     //鼠标事件
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
