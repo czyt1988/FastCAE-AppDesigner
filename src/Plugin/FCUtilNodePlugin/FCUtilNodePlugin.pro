@@ -20,6 +20,7 @@ include($${FC_SRC_DIR}/FCNode/FCNode.pri)
 HEADERS += \
     FCConstValueNodeGraphicsItem.h \
     FCNodeGraphicsFactory.h \
+    FCTestNodeGraphicsItem.h \
     FCUtilNodePlugin.h \
     FCUtilNodePluginGlobal.h
 
@@ -27,6 +28,7 @@ HEADERS += \
 SOURCES += \
     FCConstValueNodeGraphicsItem.cpp \
     FCNodeGraphicsFactory.cpp \
+    FCTestNodeGraphicsItem.cpp \
     FCUtilNodePlugin.cpp
 
 RESOURCES += \

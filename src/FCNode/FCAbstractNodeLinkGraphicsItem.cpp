@@ -5,11 +5,21 @@
 #include "FCNodeGraphicsScene.h"
 #include "FCNodePalette.h"
 #include <math.h>
+#include <QGraphicsSimpleTextItem>
+
 class FCAbstractNodeLinkGraphicsItemPrivate {
     FC_IMPL_PUBLIC(FCAbstractNodeLinkGraphicsItem)
 public:
     FCAbstractNodeLinkGraphicsItemPrivate(FCAbstractNodeLinkGraphicsItem *p);
     FCNodeGraphicsScene *nodeScene() const;
+    void setTextVisible(bool on, FCAbstractNodeLinkGraphicsItem::Orientations o);
+    bool isTextVisible(FCAbstractNodeLinkGraphicsItem::Orientations o) const;
+    void updateText(QGraphicsSimpleTextItem *item, const QPointF& p, const FCNodeLinkPoint& pl, int offset);
+    void updateText();
+    void setPointTextColor(const QColor& c, FCAbstractNodeLinkGraphicsItem::Orientations o);
+    QColor getPointTextColor(FCAbstractNodeLinkGraphicsItem::Orientations o) const;
+    void setPointTextPositionOffset(int offset, FCAbstractNodeLinkGraphicsItem::Orientations o);
+    int getPointTextPositionOffset(FCAbstractNodeLinkGraphicsItem::Orientations o) const;
 
     FCAbstractNodeGraphicsItem *_fromItem;
     FCAbstractNodeGraphicsItem *_toItem;
@@ -20,6 +30,10 @@ public:
     QRectF _boundingRect;           ///< 记录boundingRect
     qreal _bezierControlScale;      ///<贝塞尔曲线的控制点的缩放比例
     QPainterPath _linePath;         ///< 通过点得到的绘图线段
+    QPen _linePen;                  ///< 线的画笔
+    QGraphicsSimpleTextItem *_fromTextItem;
+    QGraphicsSimpleTextItem *_toTextItem;
+    QPair<int, int> _pointTextPositionOffset;///< 记录文本和连接点的偏移量，默认为10
 };
 
 FCAbstractNodeLinkGraphicsItemPrivate::FCAbstractNodeLinkGraphicsItemPrivate(FCAbstractNodeLinkGraphicsItem *p)
@@ -30,13 +44,172 @@ FCAbstractNodeLinkGraphicsItemPrivate::FCAbstractNodeLinkGraphicsItemPrivate(FCA
     , _toPos(100, 100)
     , _boundingRect(0, 0, 100, 100)
     , _bezierControlScale(0.25)
+    , _pointTextPositionOffset(10, 10)
 {
+    _linePen = QPen(FCNodePalette::getGlobalLinkLineColor());
+    _fromTextItem = new QGraphicsSimpleTextItem(p);
+    _toTextItem = new QGraphicsSimpleTextItem(p);
+    setTextVisible(false, FCAbstractNodeLinkGraphicsItem::OrientationBoth);
 }
 
 
 FCNodeGraphicsScene *FCAbstractNodeLinkGraphicsItemPrivate::nodeScene() const
 {
     return (qobject_cast<FCNodeGraphicsScene *>(q_ptr->scene()));
+}
+
+
+void FCAbstractNodeLinkGraphicsItemPrivate::setTextVisible(bool on, FCAbstractNodeLinkGraphicsItem::Orientations o)
+{
+    switch (o)
+    {
+    case FCAbstractNodeLinkGraphicsItem::OrientationFrom:
+        _fromTextItem->setVisible(on);
+        break;
+
+    case FCAbstractNodeLinkGraphicsItem::OrientationTo:
+        _toTextItem->setVisible(on);
+        break;
+
+    default:
+        _fromTextItem->setVisible(on);
+        _toTextItem->setVisible(on);
+        break;
+    }
+}
+
+
+bool FCAbstractNodeLinkGraphicsItemPrivate::isTextVisible(FCAbstractNodeLinkGraphicsItem::Orientations o) const
+{
+    switch (o)
+    {
+    case FCAbstractNodeLinkGraphicsItem::OrientationFrom:
+        return (_fromTextItem->isVisible());
+
+    case FCAbstractNodeLinkGraphicsItem::OrientationTo:
+        return (_toTextItem->isVisible());
+
+    default:
+        break;
+    }
+    return (_fromTextItem->isVisible() && _toTextItem->isVisible());
+}
+
+
+void FCAbstractNodeLinkGraphicsItemPrivate::updateText(QGraphicsSimpleTextItem *item, const QPointF& p, const FCNodeLinkPoint& pl, int offset)
+{
+    item->setText(pl.name);
+    int hoff = item->boundingRect().height();
+
+    hoff /= 2;
+    int w = item->boundingRect().width();
+
+    switch (pl.direction)
+    {
+    case FCNodeLinkPoint::East:
+        item->setRotation(0);
+        item->setPos(p.x()+offset, p.y()-hoff);
+        break;
+
+    case FCNodeLinkPoint::South:
+        item->setRotation(90);
+        item->setPos(p.x()+hoff, p.y()+offset);
+        break;
+
+    case FCNodeLinkPoint::West:
+        item->setRotation(0);
+        item->setPos(p.x()-w-offset, p.y()-hoff);
+        break;
+
+    case FCNodeLinkPoint::North:
+        item->setRotation(90);
+        item->setPos(p.x()+hoff, p.y()-w-offset);
+        break;
+
+    default:
+        break;
+    }
+}
+
+
+void FCAbstractNodeLinkGraphicsItemPrivate::updateText()
+{
+    updateText(_fromTextItem, _fromPos, _fromPoint, _pointTextPositionOffset.first);
+    updateText(_toTextItem, _toPos, _toPoint, _pointTextPositionOffset.second);
+}
+
+
+void FCAbstractNodeLinkGraphicsItemPrivate::setPointTextColor(const QColor& c, FCAbstractNodeLinkGraphicsItem::Orientations o)
+{
+    switch (o)
+    {
+    case FCAbstractNodeLinkGraphicsItem::OrientationFrom:
+        _fromTextItem->setBrush(c);
+        break;
+
+    case FCAbstractNodeLinkGraphicsItem::OrientationTo:
+        _toTextItem->setBrush(c);
+        break;
+
+    default:
+        _fromTextItem->setBrush(c);
+        _toTextItem->setBrush(c);
+        break;
+    }
+}
+
+
+QColor FCAbstractNodeLinkGraphicsItemPrivate::getPointTextColor(FCAbstractNodeLinkGraphicsItem::Orientations o) const
+{
+    switch (o)
+    {
+    case FCAbstractNodeLinkGraphicsItem::OrientationFrom:
+        return (_fromTextItem->brush().color());
+
+    case FCAbstractNodeLinkGraphicsItem::OrientationTo:
+        return (_toTextItem->brush().color());
+
+    default:
+        break;
+    }
+    return (QColor());
+}
+
+
+void FCAbstractNodeLinkGraphicsItemPrivate::setPointTextPositionOffset(int offset, FCAbstractNodeLinkGraphicsItem::Orientations o)
+{
+    switch (o)
+    {
+    case FCAbstractNodeLinkGraphicsItem::OrientationFrom:
+        _pointTextPositionOffset.first = offset;
+        break;
+
+    case FCAbstractNodeLinkGraphicsItem::OrientationTo:
+        _pointTextPositionOffset.second = offset;
+        break;
+
+    default:
+        _pointTextPositionOffset.first = offset;
+        _pointTextPositionOffset.second = offset;
+        break;
+    }
+}
+
+
+int FCAbstractNodeLinkGraphicsItemPrivate::getPointTextPositionOffset(FCAbstractNodeLinkGraphicsItem::Orientations o) const
+{
+    switch (o)
+    {
+    case FCAbstractNodeLinkGraphicsItem::OrientationFrom:
+        return (_pointTextPositionOffset.first);
+
+    case FCAbstractNodeLinkGraphicsItem::OrientationTo:
+        return (_pointTextPositionOffset.second);
+
+    default:
+        break;
+    }
+    return (0);
 }
 
 
@@ -48,6 +221,7 @@ FCAbstractNodeLinkGraphicsItem::FCAbstractNodeLinkGraphicsItem(QGraphicsItem *p)
     : QGraphicsItem(p)
     , d_ptr(new FCAbstractNodeLinkGraphicsItemPrivate(this))
 {
+    setFlags(flags() | ItemIsSelectable);
 }
 
 
@@ -55,6 +229,7 @@ FCAbstractNodeLinkGraphicsItem::FCAbstractNodeLinkGraphicsItem(FCAbstractNodeGra
     : QGraphicsItem(p)
     , d_ptr(new FCAbstractNodeLinkGraphicsItemPrivate(this))
 {
+    setFlags(flags() | ItemIsSelectable);
     attachFrom(from, pl);
 }
 
@@ -101,7 +276,7 @@ void FCAbstractNodeLinkGraphicsItem::updateBoundingRect()
         d_ptr->_fromPoint.direction = FCNodeLinkPoint::East;
         d_ptr->_toPoint.direction = FCNodeLinkPoint::West;
         generatePainterPath();
-        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect();
+        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect().adjusted(-2, -2, 2, 2);//留足选中后画笔变宽的绘制余量
         return;
     } else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem == nullptr)) {
         //只设定了一个from
@@ -109,19 +284,20 @@ void FCAbstractNodeLinkGraphicsItem::updateBoundingRect()
         d_ptr->_toPos = mapFromScene(sc->getCurrentMouseScenePos());
         d_ptr->_toPoint.direction = generateOppositeDirection(d_ptr->_fromPoint.direction);
         generatePainterPath();
-        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect();
+        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect().adjusted(-2, -2, 2, 2);//留足选中后画笔变宽的绘制余量
     } else if ((d_ptr->_fromItem != nullptr) && (d_ptr->_toItem != nullptr)) {
         //两个都不为空
         d_ptr->_toPos = mapFromItem(d_ptr->_toItem, d_ptr->_toPoint.position);
         generatePainterPath();
-        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect();
+        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect().adjusted(-2, -2, 2, 2);//留足选中后画笔变宽的绘制余量
     }else{
         generatePainterPath();
-        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect();
+        d_ptr->_boundingRect = d_ptr->_linePath.boundingRect().adjusted(-2, -2, 2, 2);//留足选中后画笔变宽的绘制余量
         qDebug()	<< "occ unknow link type,please check!, from item:" << d_ptr->_fromItem
                 << " to item:" << d_ptr->_toItem
         ;
     }
+    d_ptr->updateText();
 }
 
 
@@ -212,6 +388,101 @@ FCNodeLinkPoint::Direction FCAbstractNodeLinkGraphicsItem::generateOppositeDirec
  */
 void FCAbstractNodeLinkGraphicsItem::setBezierControlScale(qreal rate)
 {
+    d_ptr->_bezierControlScale = rate;
+}
+
+
+/**
+ * @brief 获取贝塞尔曲线的控制点的缩放比例
+ * @return
+ */
+qreal FCAbstractNodeLinkGraphicsItem::getBezierControlScale() const
+{
+    return (d_ptr->_bezierControlScale);
+}
+
+
+/**
+ * @brief 设置线的画笔
+ * @param p
+ */
+void FCAbstractNodeLinkGraphicsItem::setLinePen(const QPen& p)
+{
+    d_ptr->_linePen = p;
+}
+
+
+/**
+ * @brief 返回当前画笔
+ * @return
+ */
+QPen FCAbstractNodeLinkGraphicsItem::getLinePen() const
+{
+    return (d_ptr->_linePen);
+}
+
+
+/**
+ * @brief 设置是否显示连接点的文本
+ * @param on
+ */
+void FCAbstractNodeLinkGraphicsItem::setPointTextVisible(bool on, Orientations o)
+{
+    d_ptr->setTextVisible(on, o);
+}
+
+
+/**
+ * @brief 是否显示连接点的文本
+ * @return
+ */
+bool FCAbstractNodeLinkGraphicsItem::isPointTextVisible(Orientations o) const
+{
+    return (d_ptr->isTextVisible(o));
+}
+
+
+/**
+ * @brief 设置连接点显示的颜色
+ * @param c
+ * @param o
+ */
+void FCAbstractNodeLinkGraphicsItem::setPointTextColor(const QColor& c, FCAbstractNodeLinkGraphicsItem::Orientations o)
+{
+    d_ptr->setPointTextColor(c, o);
+}
+
+
+/**
+ * @brief 获取连接点显示的颜色
+ * @param o 不能指定OrientationBoth，指定OrientationBoth返回QColor()
+ * @return
+ */
+QColor FCAbstractNodeLinkGraphicsItem::getPointTextColor(FCAbstractNodeLinkGraphicsItem::Orientations o) const
+{
+    return (d_ptr->getPointTextColor(o));
+}
+
+
+/**
+ * @brief 设置文本和连接点的偏移量，默认为10
+ * @param offset
+ * @param o
+ */
+void FCAbstractNodeLinkGraphicsItem::setPointTextPositionOffset(int offset, FCAbstractNodeLinkGraphicsItem::Orientations o)
+{
+    d_ptr->setPointTextPositionOffset(offset, o);
+}
+
+
+/**
+ * @brief 文本和连接点的偏移量
+ * @param o 不能指定OrientationBoth，指定OrientationBoth返回0
+ * @return 指定OrientationBoth返回0
+ */
+int FCAbstractNodeLinkGraphicsItem::getPointTextPositionOffset(FCAbstractNodeLinkGraphicsItem::Orientations o) const
+{
+    return (d_ptr->getPointTextPositionOffset(o));
 }
 
 
@@ -230,11 +501,14 @@ QPainterPath FCAbstractNodeLinkGraphicsItem::shape() const
 void FCAbstractNodeLinkGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->save();
-    QPen pen(FCNodePalette::getGlobalLinkLineColor());
+    QPen pen = d_ptr->_linePen;
 
+    if (isSelected()) {
+        pen.setWidth(pen.width()+2);
+        pen.setColor(pen.color().darker(150));
+    }
     painter->setPen(pen);
     painter->drawPath(d_ptr->_linePath);
-    //painter->drawLine(d_ptr->_fromPos, d_ptr->_toPos);
     painter->restore();
 }
 
@@ -252,6 +526,7 @@ bool FCAbstractNodeLinkGraphicsItem::attachFrom(FCAbstractNodeGraphicsItem *item
     }
     d_ptr->_fromItem = item;
     d_ptr->_fromPoint = pl;
+    d_ptr->updateText();
     item->recordLink(this, pl);
     return (true);
 }
@@ -285,6 +560,7 @@ bool FCAbstractNodeLinkGraphicsItem::attachTo(FCAbstractNodeGraphicsItem *item, 
     }
     d_ptr->_toItem = item;
     d_ptr->_toPoint = pl;
+    d_ptr->updateText();
     item->recordLink(this, pl);
     return (true);
 }
@@ -326,8 +602,8 @@ QVariant FCAbstractNodeLinkGraphicsItem::itemChange(QGraphicsItem::GraphicsItemC
 {
     switch (change)
     {
-    case QGraphicsItem::ItemSceneChange:
-        updateBoundingRect();
+    case QGraphicsItem::ItemSelectedHasChanged:
+        setPointTextVisible(value.toBool());
         break;
 
     default:

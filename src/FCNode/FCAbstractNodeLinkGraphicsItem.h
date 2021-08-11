@@ -18,12 +18,21 @@ class FCNODE_API FCAbstractNodeLinkGraphicsItem : public QGraphicsItem
     friend class FCAbstractNodeGraphicsItem;
     friend class FCNodeGraphicsScene;
 public:
-    enum { Type = FastCAE::GraphicsLinkItem };
+    enum AnonymousType { anonymous = FastCAE::GraphicsLinkItem };
     int type() const
     {
-        return (Type);
+        return (anonymous);
     }
 
+
+    /**
+     * @brief 标记方向
+     */
+    enum Orientations {
+        OrientationFrom = 0,    ///< 连接的开始点
+        OrientationTo,          ///< 连接的结束点
+        OrientationBoth         ///< 两个都包含
+    };
 
     //自动根据fromitem来更新位置
     void updatePos();
@@ -45,6 +54,23 @@ public:
 
     //设置贝塞尔曲线的控制点的缩放比例，FCAbstractNodeLinkGraphicsItem在连线时按照控制点的方向延伸出贝塞尔曲线的控制点，延伸的控制点的长度w = length * bezierControlScale
     void setBezierControlScale(qreal rate = 0.25);
+    qreal getBezierControlScale() const;
+
+    //设置线的画笔
+    void setLinePen(const QPen& p);
+    QPen getLinePen() const;
+
+    //设置是否显示连接点的文本
+    void setPointTextVisible(bool on = true, Orientations o = OrientationBoth);
+    bool isPointTextVisible(Orientations o = OrientationBoth) const;
+
+    //设置连接点显示的颜色
+    void setPointTextColor(const QColor& c, Orientations o = OrientationBoth);
+    QColor getPointTextColor(Orientations o) const;
+
+    //设置文本和连接点的偏移量，默认为10
+    void setPointTextPositionOffset(int offset, Orientations o = OrientationBoth);
+    int getPointTextPositionOffset(Orientations o) const;
 
 public:
     FCAbstractNodeLinkGraphicsItem(QGraphicsItem *p = nullptr);

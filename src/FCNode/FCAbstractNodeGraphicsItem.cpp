@@ -55,7 +55,7 @@ FCAbstractNodeGraphicsItem::FCAbstractNodeGraphicsItem(QGraphicsItem *p) : QGrap
     , d_ptr(new FCAbstractNodeGraphicsItemPrivate(this))
 {
     d_ptr->_meta.setNodePrototype("FC.FCNodeGraphicsItem");
-    setFlags(ItemIsSelectable
+    setFlags(flags() | ItemIsSelectable
         | ItemIsMovable
         | ItemSendsGeometryChanges //确保位置改变时能发出QGraphicsItem::ItemPositionHasChanged
         );
