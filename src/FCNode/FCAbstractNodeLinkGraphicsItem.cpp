@@ -20,6 +20,7 @@ public:
     QColor getPointTextColor(FCAbstractNodeLinkGraphicsItem::Orientations o) const;
     void setPointTextPositionOffset(int offset, FCAbstractNodeLinkGraphicsItem::Orientations o);
     int getPointTextPositionOffset(FCAbstractNodeLinkGraphicsItem::Orientations o) const;
+    bool isStartLinking() const;
 
     FCAbstractNodeGraphicsItem *_fromItem;
     FCAbstractNodeGraphicsItem *_toItem;
@@ -210,6 +211,12 @@ int FCAbstractNodeLinkGraphicsItemPrivate::getPointTextPositionOffset(FCAbstract
         break;
     }
     return (0);
+}
+
+
+bool FCAbstractNodeLinkGraphicsItemPrivate::isStartLinking() const
+{
+    return ((_fromItem != nullptr) && (_toItem == nullptr));
 }
 
 
@@ -500,9 +507,14 @@ QPainterPath FCAbstractNodeLinkGraphicsItem::shape() const
 
 void FCAbstractNodeLinkGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     painter->save();
     QPen pen = d_ptr->_linePen;
 
+    if (d_ptr->isStartLinking()) {
+        pen.setStyle(Qt::DashLine);
+    }
     if (isSelected()) {
         pen.setWidth(pen.width()+2);
         pen.setColor(pen.color().darker(150));
@@ -604,6 +616,13 @@ QVariant FCAbstractNodeLinkGraphicsItem::itemChange(QGraphicsItem::GraphicsItemC
     {
     case QGraphicsItem::ItemSelectedHasChanged:
         setPointTextVisible(value.toBool());
+        break;
+
+    case QGraphicsItem::ItemSelectedChange:
+        //在连接状态中不允许选中
+        if (d_ptr->isStartLinking()) {
+            return (false);
+        }
         break;
 
     default:

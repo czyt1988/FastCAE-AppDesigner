@@ -12,9 +12,6 @@ FCConstValueNodeGraphicsItem::FCConstValueNodeGraphicsItem(QGraphicsItem *p)
     QList<FCNodeLinkPoint>& lps = linkPoints();
 
     lps.append(FCNodeLinkPoint(QPoint(50-4, 25), "out", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::East));
-    lps.append(FCNodeLinkPoint(QPoint(25, 50-4), "out1", FCNodeLinkPoint::OutPut, FCNodeLinkPoint::South));
-    lps.append(FCNodeLinkPoint(QPoint(0+4, 25), "in1", FCNodeLinkPoint::Input, FCNodeLinkPoint::West));
-    lps.append(FCNodeLinkPoint(QPoint(25, 0+4), "in2", FCNodeLinkPoint::Input, FCNodeLinkPoint::North));
 }
 
 

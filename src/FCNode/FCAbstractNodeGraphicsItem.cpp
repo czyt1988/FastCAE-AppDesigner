@@ -51,7 +51,7 @@ FCAbstractNodeGraphicsItemPrivate::FCAbstractNodeGraphicsItemPrivate(FCAbstractN
 
 ////////////////////////////////////////////////////////////////////////
 
-FCAbstractNodeGraphicsItem::FCAbstractNodeGraphicsItem(QGraphicsItem *p) : QGraphicsItem(p)
+FCAbstractNodeGraphicsItem::FCAbstractNodeGraphicsItem(QGraphicsItem *p) : QAbstractGraphicsShapeItem(p)
     , d_ptr(new FCAbstractNodeGraphicsItemPrivate(this))
 {
     d_ptr->_meta.setNodePrototype("FC.FCNodeGraphicsItem");
@@ -196,6 +196,8 @@ bool FCAbstractNodeGraphicsItem::isHaveLinkPoint(const FCNodeLinkPoint& pl) cons
  */
 void FCAbstractNodeGraphicsItem::paintLinkPoints(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     const QList<FCNodeLinkPoint>& lps = getLinkPoints();
 
     for (const FCNodeLinkPoint& lp : lps)

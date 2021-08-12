@@ -33,15 +33,9 @@ public:
 protected:
     bool checkType() const;
 
-//    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
-//    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
-//    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
-
 private:
     QVariant m_value;
     QList<FCNodeLinkPoint> m_linkPoints;
-//    QColor m_hoverEdgeColor;        ///< 鼠标hover时的颜色
-//    QPen m_edge;                    ///< 边框画笔
 };
 
 #endif // FCCONSTVALUENODEGRAPHICSITEM_H

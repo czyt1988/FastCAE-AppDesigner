@@ -1,7 +1,7 @@
 ﻿#ifndef FCABSTRACTNODEGRAPHICSITEM_H
 #define FCABSTRACTNODEGRAPHICSITEM_H
 #include "FCNodeGlobal.h"
-#include <QGraphicsItem>
+#include <QAbstractGraphicsShapeItem>
 #include <QIcon>
 #include "FCNodeMetaData.h"
 #include "FCNodeLinkPoint.h"
@@ -12,7 +12,7 @@ FC_IMPL_FORWARD_DECL(FCAbstractNodeGraphicsItem)
  * @brief 这是节点的基类，fastcae所有节点都继承此类
  * 作为一个节点的QGraphicsItem，
  */
-class FCNODE_API FCAbstractNodeGraphicsItem : public QGraphicsItem
+class FCNODE_API FCAbstractNodeGraphicsItem : public QAbstractGraphicsShapeItem
 {
     FC_IMPL(FCAbstractNodeGraphicsItem)
     friend class FCAbstractNodeGraphicsFactory;
@@ -65,7 +65,8 @@ public:
     //获取连接点对应的矩形区域
     virtual QRect getlinkPointRect(const FCNodeLinkPoint& pl) const;
 
-
+    //获取节点对应的窗口，一般保存节点的设置
+    virtual QWidget *nodeWidget();
 
 protected:
     //处理一些联动事件，如和FCAbstractNodeLinkGraphicsItem的联动

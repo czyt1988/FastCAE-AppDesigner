@@ -1,5 +1,6 @@
 ﻿#include "FCNodeGraphicsFactory.h"
 #include "FCConstValueNodeGraphicsItem.h"
+#include "FCTestNodeGraphicsItem.h"
 FCNodeGraphicsFactory::FCNodeGraphicsFactory(QObject *p) : FCAbstractNodeGraphicsFactory(p)
 {
     createMetaData();
@@ -46,8 +47,14 @@ void FCNodeGraphicsFactory::createMetaData()
 {
     FpCreate fp;
 
+    //FCConstValueNodeGraphicsItem
     fp = []()->FCAbstractNodeGraphicsItem *{
             return (new FCConstValueNodeGraphicsItem());
+        };
+    m_prototypeTpfp[saveGetMetaType(fp())] = fp;
+    //FCTestNodeGraphicsItem
+    fp = []()->FCAbstractNodeGraphicsItem *{
+            return (new FCTestNodeGraphicsItem());
         };
     m_prototypeTpfp[saveGetMetaType(fp())] = fp;
 }
