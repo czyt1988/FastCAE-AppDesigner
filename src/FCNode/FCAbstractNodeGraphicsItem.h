@@ -6,6 +6,7 @@
 #include "FCNodeMetaData.h"
 #include "FCNodeLinkPoint.h"
 class FCAbstractNodeLinkGraphicsItem;
+class FCAbstractNodeWidget;
 FC_IMPL_FORWARD_DECL(FCAbstractNodeGraphicsItem)
 
 /**
@@ -66,7 +67,8 @@ public:
     virtual QRect getlinkPointRect(const FCNodeLinkPoint& pl) const;
 
     //获取节点对应的窗口，一般保存节点的设置
-    virtual QWidget *nodeWidget();
+    FCAbstractNodeWidget *getNodeWidget() const;
+    void setNodeWidget(FCAbstractNodeWidget *p);
 
 protected:
     //处理一些联动事件，如和FCAbstractNodeLinkGraphicsItem的联动

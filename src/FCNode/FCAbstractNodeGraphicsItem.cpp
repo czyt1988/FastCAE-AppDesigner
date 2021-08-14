@@ -5,6 +5,8 @@
 #include "FCNodeGraphicsScene.h"
 #include "FCNodePalette.h"
 #include "FCAbstractNodeLinkGraphicsItem.h"
+#include "FCAbstractNodeWidget.h"
+#include <QPointer>
 ////////////////////////////////////////////////////////////////////////
 class _LinkData {
 public:
@@ -39,8 +41,9 @@ class FCAbstractNodeGraphicsItemPrivate {
 public:
     FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p);
     FCNodeMetaData _meta;
-    QList<FCNodeLinkPoint> _linkPoints;     ///< 这里存放所有的linkpoint
-    QList<_LinkData> _linkDatas;            ///< 这里记录所有的link
+    QList<FCNodeLinkPoint> _linkPoints;             ///< 这里存放所有的linkpoint
+    QList<_LinkData> _linkDatas;                    ///< 这里记录所有的link
+    QPointer<FCAbstractNodeWidget> _nodeWidget;     ///< 记录节点的窗口指针
 };
 
 FCAbstractNodeGraphicsItemPrivate::FCAbstractNodeGraphicsItemPrivate(FCAbstractNodeGraphicsItem *p)
@@ -250,6 +253,21 @@ QRect FCAbstractNodeGraphicsItem::getlinkPointRect(const FCNodeLinkPoint& pl) co
         break;
     }
     return (QRect(pl.position.x()-3, pl.position.y()-3, 6, 6));
+}
+
+
+FCAbstractNodeWidget *FCAbstractNodeGraphicsItem::getNodeWidget() const
+{
+    return (d_ptr->_nodeWidget.data());
+}
+
+
+void FCAbstractNodeGraphicsItem::setNodeWidget(FCAbstractNodeWidget *p)
+{
+    if (p) {
+        p->setNodeItem(this);
+    }
+    d_ptr->_nodeWidget = p;
 }
 
 
