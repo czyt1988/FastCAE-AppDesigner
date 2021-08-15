@@ -8,7 +8,9 @@
 /**
  * @brief FCNodeGraphicsItem的工厂基类，所有自定义的node集合最后都需要提供一个工厂
  *
- * 工厂将通过prototype来创建一个FCNodeGraphicsItem，因此，对于自定义的FCNodeGraphicsItem，都需要给对应的工厂
+ * 工厂将通过prototype来创建一个FCAbstractNode,FCAbstractNode可以生成FCAbstractNodeGraphicsItem实现前端的渲染，
+ * 因此，任何节点都需要实现一个FCAbstractNode和一个FCAbstractNodeGraphicsItem，一个实现逻辑节点的描述，
+ * 一个实现前端的渲染,另外FCAbstractNodeGraphicsItem可以生成FCAbstractNodeWidget，用于设置FCAbstractNodeGraphicsItem
  */
 class FCNODE_API FCAbstractNodeGraphicsFactory : public QObject
 {

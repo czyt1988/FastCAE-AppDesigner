@@ -13,7 +13,7 @@ class FCNODE_API FCDataItem
 {
 public:
     FCDataItem();
-    FCDataItem(const QVariant& v);
+    FCDataItem(const QVariant& v, const QString& n);
     //变量值
     QVariant getValue() const;
     void setValue(const QVariant& v);
@@ -22,9 +22,12 @@ public:
 
     //变量的注释
     QString getName() const;
-    void setName(const QString& s);
+    void setName(const QString& n);
     QString& name();
     const QString& name() const;
+
+    //设置值和名字
+    void set(const QVariant& v, const QString& n);
 
 private:
     QVariant m_variant;

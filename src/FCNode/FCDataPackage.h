@@ -32,7 +32,32 @@ public:
     //拷贝
     FCDataPackage copy() const;
 
-    //
+    //获取这个变量的id，可以看出是否共同引用一个变量
+    qint64 id() const;
+
+    //等于判断 只要id相等就认为相等
+    bool operator ==(const FCDataPackage& other) const;
+
+    //获取值
+    QVariant getValue(const QString& key) const;
+
+    //获取值对应的名字
+    QString getValueName(const QString& key) const;
+
+    //获取item
+    FCDataItem getValueItem(const QString& key) const;
+
+    //设置值
+    void setValue(const QString& key, const QVariant& v, const QString& name);
+
+    //获取所有的值
+    QList<QVariant> getValues() const;
+
+    //获取所有的变量名
+    QList<QString> getValueNames() const;
+
+    //获取所有的key
+    QList<QString> getKeys() const;
 };
 
 #endif // FCDATAPACKAGE_H

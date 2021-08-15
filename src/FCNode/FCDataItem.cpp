@@ -5,9 +5,9 @@ FCDataItem::FCDataItem()
 }
 
 
-FCDataItem::FCDataItem(const QVariant& v)
+FCDataItem::FCDataItem(const QVariant& v, const QString& n)
 {
-    setValue(v);
+    set(v, n);
 }
 
 
@@ -41,9 +41,9 @@ QString FCDataItem::getName() const
 }
 
 
-void FCDataItem::setName(const QString& s)
+void FCDataItem::setName(const QString& n)
 {
-    m_name = s;
+    m_name = n;
 }
 
 
@@ -56,6 +56,13 @@ QString& FCDataItem::name()
 const QString& FCDataItem::name() const
 {
     return (m_name);
+}
+
+
+void FCDataItem::set(const QVariant& v, const QString& n)
+{
+    setValue(v);
+    setName(n);
 }
 
 
@@ -73,6 +80,6 @@ bool operator <(const FCDataItem& a, const FCDataItem& b)
 
 QDebug operator <<(QDebug dbg, const FCDataItem& a)
 {
-    dbg.nospace() << "(" << a.name << ")" << a.value();
+    dbg.nospace() << "(" << a.name() << ")" << a.value();
     return (dbg.space());
 }
